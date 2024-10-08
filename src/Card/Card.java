@@ -1,6 +1,6 @@
 package Card;
 
-public class Card<T extends Enum<T>> {
+public class Card<T extends Enum<T>>  {
     private final T face;
     private final String criteria;
     private boolean criteriaSideUp = true;
