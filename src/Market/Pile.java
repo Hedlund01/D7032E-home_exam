@@ -1,79 +1,79 @@
 package Market;
 
-import Card.Card;
+import Card.ICard;
 import Exceptions.PileOutOfCardsException;
 
 import java.util.ArrayList;
 
-public class Pile<T extends Enum<T>> {
+public class Pile {
 
-    private ArrayList<Card<T>> pointCards;
-    private Card<T>[] faceCards = new Card[2];
+    private ArrayList<ICard> pointICards;
+    private ICard[] faceICards = new ICard[2];
 
-    public Pile(ArrayList<Card<T>> pointCards) {
-        this.pointCards = pointCards;
+    public Pile(ArrayList<ICard> pointICards) {
+        this.pointICards = pointICards;
 
         for (int i = 0; i < 2; i++) {
-            this.faceCards[i] = pointCards.removeFirst();
-            this.faceCards[i].setCriteriaSideUp(false);
+            this.faceICards[i] = pointICards.removeFirst();
+            this.faceICards[i].setCriteriaSideUp(false);
         }
     }
 
-    protected Card<T> getPointCard() throws PileOutOfCardsException {
-        if (pointCards.isEmpty()) {
+    protected ICard getPointCard() throws PileOutOfCardsException {
+        if (pointICards.isEmpty()) {
             throw new PileOutOfCardsException();
         }
-        return pointCards.getFirst();
+        return pointICards.getFirst();
     }
 
-    protected Card<T> removeFirstPointCard() throws PileOutOfCardsException {
-        if (pointCards.isEmpty()) {
+    protected ICard removeFirstPointCard() throws PileOutOfCardsException {
+        if (pointICards.isEmpty()) {
             throw new PileOutOfCardsException();
         }
-        return pointCards.removeFirst();
+        return pointICards.removeFirst();
     }
 
-    protected Card<T> removeLastPointCard() throws PileOutOfCardsException {
-        if (pointCards.isEmpty()) {
+    protected ICard removeLastPointCard() throws PileOutOfCardsException {
+        if (pointICards.isEmpty()) {
             throw new PileOutOfCardsException();
         }
-        return pointCards.removeLast();
+        return pointICards.removeLast();
     }
 
-    protected Card<T> getFaceCard(int index) {
-        return faceCards[index];
+    protected ICard getFaceCard(int index) {
+        return faceICards[index];
     }
 
-    protected Card<T> removeFaceCard(int index) throws PileOutOfCardsException {
-        Card<T> card = faceCards[index];
+    protected ICard removeFaceCard(int index) throws PileOutOfCardsException {
+        ICard ICard = faceICards[index];
         if (getPointCardCount() <= 1) {
             throw new PileOutOfCardsException();
         } else {
-            faceCards[index] = pointCards.removeFirst();
-            faceCards[index].setCriteriaSideUp(false);
-            return card;
+            faceICards[index] = pointICards.removeFirst();
+            faceICards[index].setCriteriaSideUp(false);
+            return ICard;
         }
     }
 
-    protected Card<T> forceRemoveFaceCard(int index) {
-        Card<T> card = faceCards[index];
-        faceCards[index] = pointCards.removeFirst();
-        if (faceCards[index] != null) {
-            faceCards[index].setCriteriaSideUp(false);
+    protected ICard forceRemoveFaceCard(int index) {
+        ICard ICard = faceICards[index];
+        faceICards[index] = pointICards.removeFirst();
+        if (faceICards[index] != null) {
+            faceICards[index].setCriteriaSideUp(false);
         }
-        return card;
+        return ICard;
     }
 
-    protected void addPointCard(Card<T> card) {
-        pointCards.add(card);
+    protected void addPointCard(ICard card) {
+        pointICards.add(card);
     }
 
 
     protected boolean isEmpty() {
-        return pointCards.isEmpty() && faceCards[0] == null && faceCards[1] == null;
+        return pointICards.isEmpty() && faceICards[0] == null && faceICards[1] == null;
     }
 
     protected int getPointCardCount() {
-        return pointCards.size();
+        return pointICards.size();
     }
 }

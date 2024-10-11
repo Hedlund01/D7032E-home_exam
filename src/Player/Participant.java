@@ -1,54 +1,68 @@
 package Player;
 
-import Card.Card;
-import Card.Vegetable;
-
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class Participant<T extends Enum<T>> implements IIsBot {
+import Card.ICard;
+
+public abstract class Participant  {
     private int playerID;
-    private Class<T> faceClass;
-    private ArrayList<Card<T>> hand = new ArrayList<Card<T>>();
+    private ArrayList<ICard> hand = new ArrayList<ICard>();
 
-    public Participant(int playerID, Class<T> faceClass) {
+    public Participant(int playerID) {
         this.playerID = playerID;
-        this.faceClass = faceClass;
     }
 
-    public void addCardToHand(Card<T> card) {
-        hand.add(card);
+    public int getPlayerID() {
+        return playerID;
     }
 
-    public ArrayList<Card<T>> getHand() {
+    public void addCardToHand(ICard ICard) {
+        hand.add(ICard);
+    }
+
+    public ArrayList<ICard> getHand() {
         return hand;
     }
 
     public String getHandString(){
         StringBuilder handString = new StringBuilder();
         handString.append("Criteria:\t");
-        for (Card<T> card : hand) {
+        for (ICard card : hand) {
             if(card.isCriteriaSideUp() && card.getFace() != null){
                 handString.append(String.format("[%d] %s (%s)\t", hand.indexOf(card), card.getCriteria(), card.getFace().toString()));
             }
         }
         handString.append("\nVegetables:\n");
-        for (var c : faceClass.getEnumConstants()) {
-            int count = countFaceCardInHand(c);
-            if(count > 0){
-                handString.append(String.format("%s: %d\t", c.toString(), count));
+        Map<String, Integer> faceCount = new HashMap<>();
+        for(ICard card: hand){
+            if(!card.isCriteriaSideUp()){
+                faceCount.put(card.getFace().toString(), faceCount.getOrDefault(card.getFace().toString(), 0) + 1);
             }
         }
+        for (Map.Entry<String, Integer> entry : faceCount.entrySet()) {
+            handString.append(String.format("%s: %d\t", entry.getKey(), entry.getValue()));
+        }
+
         return handString.toString();
     }
 
-    public int countFaceCardInHand(T face){
+
+    public int countCriteraCardInHand(){
         int count = 0;
-        for (Card<T> card : hand) {
-            if(card.getFace() == face && card.isCriteriaSideUp()){
+        for(ICard card : hand){
+            if(card.isCriteriaSideUp()){
                 count++;
             }
         }
         return count;
-
     }
+
+    public void setCriteraSideDown(int index){
+        hand.get(index).setCriteriaSideUp(false);
+    }
+
+    public abstract boolean isBot();
 }

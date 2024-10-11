@@ -1,11 +1,12 @@
 package Player;
 
-public class Bot<T extends Enum<T>> extends Participant<T> implements IIsBot, IBot {
+public class Bot extends Participant {
 
-    public Bot(int playerID, Class<T> faceClass) {
-        super(playerID, faceClass);
+    public Bot(int playerID) {
+        super(playerID);
     }
 
+    @Override
     public boolean isBot() {
         return true;
     }

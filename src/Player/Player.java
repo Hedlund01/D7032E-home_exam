@@ -8,14 +8,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Player<T extends Enum<T>> extends Participant<T> {
+public class Player extends Participant {
     private final Socket connection;
     private final ObjectInputStream inFromClient;
     private final ObjectOutputStream outToClient;
 
 
-    public Player(int playerID, Socket connection, ObjectInputStream inFromClient, ObjectOutputStream outToClient, Class<T> faceClass) {
-        super(playerID, faceClass);
+    public Player(int playerID, Socket connection, ObjectInputStream inFromClient, ObjectOutputStream outToClient) {
+        super(playerID);
         this.connection = connection;
         this.inFromClient = inFromClient;
         this.outToClient = outToClient;

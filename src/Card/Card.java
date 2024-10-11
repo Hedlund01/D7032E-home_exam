@@ -1,6 +1,6 @@
 package Card;
 
-public class Card<T extends Enum<T>>  {
+public class Card<T extends Enum<T>> implements ICard {
     private final T face;
     private final String criteria;
     private boolean criteriaSideUp = true;
@@ -10,6 +10,7 @@ public class Card<T extends Enum<T>>  {
         this.criteria = criteria;
     }
 
+    @Override
     public String toString() {
         if (criteriaSideUp) {
             return criteria + " (" + face.toString() + ")";
@@ -18,18 +19,22 @@ public class Card<T extends Enum<T>>  {
         }
     }
 
+   @Override
    public void setCriteriaSideUp(boolean criteriaSideUp) {
         this.criteriaSideUp = criteriaSideUp;
     }
 
+    @Override
     public T getFace() {
         return face;
     }
 
+    @Override
     public String getCriteria() {
         return criteria;
     }
 
+    @Override
     public boolean isCriteriaSideUp() {
         return criteriaSideUp;
     }

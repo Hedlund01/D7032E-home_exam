@@ -5,8 +5,8 @@ import Exceptions.PileOutOfCardsException;
 
 public class VeggieMarket extends Market<Vegetable> {
 
-    public VeggieMarket(String path) {
-        super(Vegetable.class, path);
+    public VeggieMarket() {
+        super(Vegetable.class);
     }
 
     @Override
