@@ -35,6 +35,7 @@ public class VeggiePlayerTurnState extends GameState {
                 }
             }else{
                 int takenVeggies = 0;
+                //[TODO] [BUG] If the player sends AÖ and then AB it will get 3 cards
                 for(int charIndex = 0; charIndex < input.length(); charIndex++) {
                     if(Character.toUpperCase(input.charAt(charIndex)) < 'A' || Character.toUpperCase(input.charAt(charIndex)) > 'F') {
                         player.sendMessage("\nInvalid choice. Please choose up to two veggie cards from the market.\n");
@@ -66,7 +67,7 @@ public class VeggiePlayerTurnState extends GameState {
         }
 
         //Check if the player has any criteria cards in their hand
-        if(player.countCriteraCardInHand() > 0) {
+        if(player.countCriteriaCardsInHand() > 0) {
             //Give the player an option to turn a criteria card into a veggie card
             player.sendMessage("\n"+player.getHandString()+"\nWould you like to turn a criteria card into a veggie card? (Syntax example: n or 2)");
             String choice = player.readMessage();

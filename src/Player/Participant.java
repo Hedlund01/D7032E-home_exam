@@ -1,14 +1,13 @@
 package Player;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 import Card.ICard;
 
 public abstract class Participant  {
-    private int playerID;
+    private final int playerID;
     private ArrayList<ICard> hand = new ArrayList<ICard>();
 
     public Participant(int playerID) {
@@ -50,7 +49,7 @@ public abstract class Participant  {
     }
 
 
-    public int countCriteraCardInHand(){
+    public int countCriteriaCardsInHand(){
         int count = 0;
         for(ICard card : hand){
             if(card.isCriteriaSideUp()){
@@ -62,6 +61,40 @@ public abstract class Participant  {
 
     public void setCriteraSideDown(int index){
         hand.get(index).setCriteriaSideUp(false);
+    }
+
+    public int countFaceCardsInHand(){
+        return hand.size() - countCriteriaCardsInHand();
+    }
+
+    public <T extends Enum<T>> int  countFaceCardsInHand(T face){
+        int count = 0;
+        for(ICard card : hand){
+            if(card.getFace() == face){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static <T extends Enum<T>> int  countFaceCards(T face, ArrayList<ICard> hand){
+        int count = 0;
+        for(ICard card : hand){
+            if(card.getFace() == face){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static int  countFaceCards(ArrayList<ICard> hand){
+        int count = 0;
+        for(ICard card : hand){
+            if(!card.isCriteriaSideUp()){
+                count++;
+            }
+        }
+        return count;
     }
 
     public abstract boolean isBot();

@@ -72,7 +72,7 @@ public class VeggieBotTurnState extends GameState {
             if (market.getPointCard(i) != null) {
                 ArrayList<ICard> tmpHand = (ArrayList<ICard>) bot.getHand().clone();
                 tmpHand.add(market.getPointCard(i));
-                int score = scorer.calculateScore(tmpHand);
+                int score = scorer.calculateScore(tmpHand, participants, bot);
                 if (score > highestPointCard) {
                     highestPointCard = score;
                     highestPointCardIndex = i;
