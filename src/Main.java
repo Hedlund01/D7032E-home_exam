@@ -1,5 +1,4 @@
-import IONetwork.Client;
-import IONetwork.Server;
+import networkIO.Client;
 
 public class Main {
     public static void main(String[] args) throws Exception {

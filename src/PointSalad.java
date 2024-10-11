@@ -1,6 +1,6 @@
-import Game.State.Common.StateContext;
-import IONetwork.Server;
-import Player.Participant;
+import game.state.common.StateContext;
+import networkIO.Server;
+import player.Participant;
 import java.util.ArrayList;
 
 public class PointSalad {
