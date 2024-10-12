@@ -1,79 +1,76 @@
 package test.networkIO;
 
+import exceptions.TooFewPlayersExcpetion;
+import exceptions.TooManyPlayerException;
+import networkIO.Client;
+import networkIO.Server;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import org.mockito.Mock;
+import player.Bot;
+import player.Participant;
+import player.Player;
+
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class ServerTest {
 
     @Test
-    void startAcceptingConnectionsWithPlayersAndBots() throws Exception {
-        ServerSocket mockServerSocket = mock(ServerSocket.class);
-        Socket mockSocket = mock(Socket.class);
-        ObjectInputStream mockInputStream = mock(ObjectInputStream.class);
-        ObjectOutputStream mockOutputStream = mock(ObjectOutputStream.class);
+    void serverConnectsPlayersAndBotsCorrectly() throws Exception {
+        AtomicReference<ArrayList<Participant>> participants = new AtomicReference<>();
+        Thread x = new Thread(() -> {
+            try {
+                participants.setRelease(new Server(4499).startAcceptingConnections(1, 1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        x.start();
 
-        when(mockServerSocket.accept()).thenReturn(mockSocket);
-        when(mockSocket.getInputStream()).thenReturn(mockInputStream);
-        when(mockSocket.getOutputStream()).thenReturn(mockOutputStream);
+        Thread.sleep(1000);
 
-        Server server = new Server(8080);
-        server.serverSocket = mockServerSocket;
+        new Thread(() -> {
+            try {
+                new Client("127.0.0.1", 4499);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
 
-        ArrayList<Participant> participants = server.startAcceptingConnections(2, 1);
+        while (x.isAlive()) {
+            Thread.sleep(100);
+        }
 
-        assertEquals(3, participants.size());
-        assertTrue(participants.get(0) instanceof Player);
-        assertTrue(participants.get(1) instanceof Player);
-        assertTrue(participants.get(2) instanceof Bot);
+
+        assertAll(() -> {
+            assertEquals(2, participants.get().size());
+            assertInstanceOf(Player.class, participants.get().get(0));
+            assertInstanceOf(Bot.class, participants.get().get(1));
+        });
+
     }
 
     @Test
-    void handleConnectionWithPlayer() throws Exception {
-        ServerSocket mockServerSocket = mock(ServerSocket.class);
-        Socket mockSocket = mock(Socket.class);
-        ObjectInputStream mockInputStream = mock(ObjectInputStream.class);
-        ObjectOutputStream mockOutputStream = mock(ObjectOutputStream.class);
-
-        when(mockServerSocket.accept()).thenReturn(mockSocket);
-        when(mockSocket.getInputStream()).thenReturn(mockInputStream);
-        when(mockSocket.getOutputStream()).thenReturn(mockOutputStream);
-
-        Server server = new Server(8080);
-        server.serverSocket = mockServerSocket;
-
-        Participant participant = server.handleConnection(1, false);
-
-        assertNotNull(participant);
-        assertTrue(participant instanceof Player);
+    void serverRejectsWhenFewerThen2Players() {
+        Server server = new Server(44999);
+        assertAll(() -> {
+            assertThrows(TooFewPlayersExcpetion.class, () -> server.startAcceptingConnections(0, 0));
+            assertThrows(TooFewPlayersExcpetion.class, () -> server.startAcceptingConnections(0, 1));
+            assertThrows(TooFewPlayersExcpetion.class, () -> server.startAcceptingConnections(1, 0));
+        });
     }
 
     @Test
-    void handleConnectionWithBot() {
-        Server server = new Server(8080);
-
-        Participant participant = server.handleConnection(1, true);
-
-        assertNotNull(participant);
-        assertTrue(participant instanceof Bot);
+    void serverRejectsWhenTooManyPlayers(){
+        Server server = new Server(4499);
+        assertAll(() -> {
+            assertThrows(TooManyPlayerException.class, () -> server.startAcceptingConnections(7, 0));
+            assertThrows(TooManyPlayerException.class, () -> server.startAcceptingConnections(6, 1));
+            assertThrows(TooManyPlayerException.class, () -> server.startAcceptingConnections(1, 6));
+        });
     }
 
-    @Test
-    void handleConnectionFailsGracefully() throws Exception {
-        ServerSocket mockServerSocket = mock(ServerSocket.class);
-        when(mockServerSocket.accept()).thenThrow(new RuntimeException("Connection failed"));
 
-        Server server = new Server(8080);
-        server.serverSocket = mockServerSocket;
-
-        Participant participant = server.handleConnection(1, false);
-
-        assertNull(participant);
-    }
 }

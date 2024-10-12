@@ -1,5 +1,7 @@
 package networkIO;
 
+import exceptions.TooFewPlayersExcpetion;
+import exceptions.TooManyPlayerException;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +16,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
-    public ServerSocket serverSocket;
+    private ServerSocket serverSocket;
     private static final Logger logger = LogManager.getLogger();
 
     public Server(int port) {
@@ -31,6 +33,15 @@ public class Server {
                 .put("nrOfPlayers", Integer.toString(players))
                 .put("nrOfBots", Integer.toString(bots))
         ) {
+            if(players + bots < 2) {
+                logger.error("Cannot start game with fewer than 2 players");
+                throw new TooFewPlayersExcpetion("Cannot start game with fewer than 2 players");
+            }
+
+            if(players + bots > 6){
+                logger.error("Cannot start game with more than 6 players");
+                throw new TooManyPlayerException("Cannot start game with more than 6 players");
+            }
             ArrayList<Participant> playerList = new ArrayList<>();
             int playerId = 1;
             // Accept players
