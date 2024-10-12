@@ -18,7 +18,6 @@ public class PointSalad {
             game.executeNextState();
         } catch (IndexOutOfBoundsException e){
             System.out.println("Invalid number of arguments; please provide a port, number of players, and number of bots");
-            return;
         }
     }
 

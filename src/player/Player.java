@@ -1,11 +1,15 @@
 package player;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class Player extends Participant {
+    private static final Logger logger = LogManager.getLogger();
     private final Socket connection;
     private final ObjectInputStream inFromClient;
     private final ObjectOutputStream outToClient;
@@ -25,6 +29,7 @@ public class Player extends Participant {
             try {
                 outToClient.writeObject(message);
             } catch (Exception e) {
+                logger.error("Error sending message to player {}. Error: {}", getPlayerID(), e.getMessage());
             }
         }
     }
@@ -35,6 +40,7 @@ public class Player extends Participant {
             try {
                 word = (String) inFromClient.readObject();
             } catch (Exception e) {
+                logger.error("Error reading message from player {}. Error: {}", getPlayerID(), e.getMessage());
             }
         }
         return word;

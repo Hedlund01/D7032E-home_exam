@@ -1,109 +1,150 @@
 package game.state.veggie;
 
-import exceptions.NotImplementedException;
+import exceptions.InvalidArgumentException;
+import exceptions.NotEnoughCardsInMarketException;
 import game.state.common.StateContext;
 import game.state.common.GameState;
-import player.Participant;
+import org.apache.logging.log4j.CloseableThreadContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import player.Player;
 
+import java.util.ArrayList;
+
 public class VeggiePlayerTurnState extends GameState {
+    private final Logger logger = LogManager.getLogger();
     private final Player player;
+
     public VeggiePlayerTurnState(StateContext stateContext, Player player) {
-        super( stateContext);
+        super(stateContext);
         this.player = player;
     }
 
-    //[TODO] Clean up this method
     @Override
     public void executeState() {
-        printInformation();
-        boolean validChoice = false;
-        while (!validChoice) {
+        try (final CloseableThreadContext.Instance _ = CloseableThreadContext
+                .put("playerID", Integer.toString(player.getPlayerID()))) {
 
-            player.sendMessage("\n\nTake either one point card (Syntax example: 2) or up to two vegetable cards (Syntax example: CF).\n");
-            String input = player.readMessage();
-            if(input.matches("\\d")){
-                int pileIndex = Integer.parseInt(input);
-                var pointCard = market.getPointCard(pileIndex);
-                if(pointCard == null){
-                    player.sendMessage("\nThis pile is empty. Please choose another pile.\n");
+            logger.info("Player is taking its turn");
+
+            printStartInformation();
+
+            int takenVeggies = 0;
+
+            while (takenVeggies < 2) {
+                if(market.isAllPilesEmpty()){
+                    break;
+                }
+                player.sendMessage(market.getDisplayString());
+                if(takenVeggies > 0){
+                    player.sendMessage("\nYou have taken " + takenVeggies + " vegetable cards.");
+                    player.sendMessage("Take " + (2 - takenVeggies) + " more vegetable cards.\n");
+                }else{
+                    player.sendMessage("\nTake either one point card (Syntax example: 2) or up to two vegetable cards (Syntax example: CF).\n");
+                }
+                String playerInput = player.readMessage();
+                logger.trace("Player input: {}", playerInput);
+                if (playerInput.matches("[0-2]") && takenVeggies == 0) {
+                    try {
+                        buyPointCard(playerInput);
+                        break;
+                    } catch (InvalidArgumentException e) {
+                        player.sendMessage("\n" + e.getMessage() + "\n");
+                    }
+                } else if (playerInput.matches("[A-F]{2}") || playerInput.matches("[A-F]")) {
+                    try {
+                        takenVeggies += buyVeggieCards(playerInput);
+                    } catch (InvalidArgumentException | NotEnoughCardsInMarketException e) {
+                        player.sendMessage("\n" + e.getMessage() + "\n");
+                    }
                 } else {
-                    player.addCardToHand(market.buyPointCard(pileIndex));
-                    player.sendMessage("\nYou took a card from pile " + pileIndex + " and added it to your hand.\n");
-                    validChoice = true;
-                }
-            }else{
-                int takenVeggies = 0;
-                //[TODO] [BUG] If the player sends AÖ and then AB it will get 3 cards
-                for(int charIndex = 0; charIndex < input.length(); charIndex++) {
-                    if(Character.toUpperCase(input.charAt(charIndex)) < 'A' || Character.toUpperCase(input.charAt(charIndex)) > 'F') {
-                        player.sendMessage("\nInvalid choice. Please choose up to two veggie cards from the market.\n");
-                        validChoice = false;
-                        break;
-                    }
-                    int choice = Character.toUpperCase(input.charAt(charIndex)) - 'A';
-                    int pileIndex = (choice == 0 || choice == 3) ? 0 : (choice == 1 || choice == 4) ? 1 : (choice == 2 || choice == 5) ? 2:-1;
-                    int veggieIndex = (choice == 0 || choice == 1 || choice == 2) ? 0 : (choice == 3 || choice == 4 || choice == 5) ? 1 : -1;
-                    var veggieCard = market.buyVeggieCard(pileIndex, veggieIndex);
-                    if(veggieCard == null) {
-                        player.sendMessage("\nThis veggie is empty. Please choose another pile.\n");
-                        validChoice = false;
-                        break;
-                    } else {
-                        if(takenVeggies == 2) {
-                            validChoice = true;
-                            break;
-                        } else {
-                            player.addCardToHand(veggieCard);
-                            takenVeggies++;
-                            //thisPlayer.sendMessage("\nYou took a card from pile " + (pileIndex) + " and added it to your hand.\n");
-                            validChoice = true;
-                        }
-                    }
+                    player.sendMessage("\nInvalid input. Please enter a valid input. Either [A-F][A-F], [A-F] or [1-2].\n");
                 }
             }
 
+            logger.trace("Checking if player has criteria cards in hand");
+            if (player.countCriteriaCardsInHand() > 0) {
+                //Give the player an option to turn a criteria card into a veggie card
+                player.sendMessage("\n" + player.getHandString() + "\nWould you like to turn a criteria card into a veggie card? (Syntax example: n or 2)");
+                String choice = player.readMessage();
+                if (choice.matches("\\d")) {
+                    int cardIndex = Integer.parseInt(choice);
+                    player.setCriteraSideDown(cardIndex);
+                }
+            }
+
+            printEndInformation();
+            logger.trace("Player turn completed");
+        }
+    }
+
+    private void buyPointCard(String input) throws InvalidArgumentException {
+        if (!input.matches("[0-2]")) {
+            logger.error("Invalid input, expected regex [1-3], but got: {}", input);
+            throw new InvalidArgumentException("Invalid input, expected [1-3], but got: " + input);
+        }
+        if (market.getPointCard(Integer.parseInt(input)) == null) {
+            throw new InvalidArgumentException("\nPile " + input + " is empty. Please choose another pile.\n");
+        }
+        var pointCard = market.buyPointCard(Integer.parseInt(input));
+        player.addCardToHand(pointCard);
+
+        player.sendMessage("\nYou have taken a card from pile " + input + " and added it to your hand.\n");
+    }
+
+    private int buyVeggieCards(String input) throws InvalidArgumentException, NotEnoughCardsInMarketException {
+        int boughtCards = 0;
+        if (!input.matches("[A-F]{2}|[A-F]") || input.length() > 2) {
+            logger.error("Invalid input, expected [A-F]{2} or [A-F]{1} but got: [{}]", input);
+            throw new InvalidArgumentException("Invalid input, expected [A-F]{2} or [A-F]{1} but got: " + input);
+        }
+        if (market.countTotalVisibleFaceCards() < input.length()) {
+            throw new NotEnoughCardsInMarketException("\nThere are not enough veggie cards in the market to take " + input.length() + " cards. Please choose another option.\n");
         }
 
-        //Check if the player has any criteria cards in their hand
-        if(player.countCriteriaCardsInHand() > 0) {
-            //Give the player an option to turn a criteria card into a veggie card
-            player.sendMessage("\n"+player.getHandString()+"\nWould you like to turn a criteria card into a veggie card? (Syntax example: n or 2)");
-            String choice = player.readMessage();
-            if(choice.matches("\\d")) {
-                int cardIndex = Integer.parseInt(choice);
-                player.setCriteraSideDown(cardIndex);
+        ArrayList<Integer> veggieCardIndexes = new ArrayList<>();
+        ArrayList<Integer> veggieCardPileIndexes = new ArrayList<>();
+        for (char c : input.toCharArray()) {
+            int choice = c - 'A';
+
+            int pileIndex = (choice == 0 || choice == 3) ? 0 : (choice == 1 || choice == 4) ? 1 : (choice == 2 || choice == 5) ? 2 : -1;
+            int veggieIndex = (choice == 0 || choice == 1 || choice == 2) ? 0 : (choice == 3 || choice == 4 || choice == 5) ? 1 : -1;
+
+            veggieCardPileIndexes.add(pileIndex);
+            veggieCardIndexes.add(veggieIndex);
+        }
+
+        for (int i = 0; i <= veggieCardIndexes.size() - 1; i++) {
+            var veggieCard = market.buyFaceCard(veggieCardPileIndexes.get(i), veggieCardIndexes.get(i));
+            if (veggieCard == null) {
+                player.sendMessage("\n Veggie pile " + input.toCharArray()[i] + " is empty. Please choose another pile\n");
+            } else {
+                player.sendMessage("\nYou have taken a card from pile " + input.toCharArray()[i] + " and added it to your hand.\n");
+                player.addCardToHand(veggieCard);
+                boughtCards++;
             }
         }
-        player.sendMessage("\nYour turn is completed\n****************************************************************\n\n");
-        sendToAllPlayers("player " + player.getPlayerID() + "'s hand is now: \n"+player.getHandString() + "\n");
-
+        return boughtCards;
     }
 
     @Override
-    public void executeNextStage() {
-        if (!market.isAllPilesEmpty()){
-            stateContext.setNextState(new VeggieNextPlayerState( stateContext, player));
-        } else {
-            throw new NotImplementedException("Game over state not implemented");
-        }
-
+    public void executeNextState() {
+        stateContext.setNextState(new VeggieNextPlayerState(stateContext, player));
+        stateContext.executeNextState();
     }
 
-    //[TODO] Extract this to a another place
-    private void sendToAllPlayers(String message){
-        for(Participant player: participants){
-            if(player instanceof Player){
-                ((Player) player).sendMessage(message);
-            }
-        }
-    }
 
-    private void printInformation(){
+    private void printStartInformation() {
         player.sendMessage("\n\n****************************************************************\nIt's your turn! Your hand is:\n");
         player.sendMessage(player.getHandString());
         player.sendMessage("\nThe piles are: ");
 
-        player.sendMessage(market.getDisplayString());
+
+    }
+
+
+    private void printEndInformation() {
+        player.sendMessage("\nYour turn is completed\n****************************************************************\n\n");
+        stateContext.sendToAllPlayers("player " + player.getPlayerID() + "'s hand is now: \n" + player.getHandString() + "\n");
     }
 }

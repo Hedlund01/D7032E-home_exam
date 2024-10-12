@@ -1,12 +1,19 @@
 package game.state.veggie;
 
 import exceptions.NotImplementedException;
+import game.score.VeggieScorer;
+import game.state.common.EndState;
 import game.state.common.StateContext;
 import game.state.common.GameState;
+import org.apache.logging.log4j.CloseableThreadContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import player.Participant;
 import player.Player;
 
+
 public class VeggieNextPlayerState extends GameState {
+    private static final Logger logger = LogManager.getLogger();
     private final Participant currentParticipant;
     private Participant nextParticipant;
     public VeggieNextPlayerState(StateContext stateContext, Participant currentParticipant) {
@@ -23,7 +30,7 @@ public class VeggieNextPlayerState extends GameState {
     }
 
     @Override
-    public void executeNextStage() {
+    public void executeNextState() {
         if(!market.isAllPilesEmpty()){
             if(nextParticipant instanceof Player) {
                 stateContext.setNextState(new VeggiePlayerTurnState( stateContext, (Player) nextParticipant));
@@ -31,7 +38,7 @@ public class VeggieNextPlayerState extends GameState {
                 stateContext.setNextState(new VeggieBotTurnState(stateContext, nextParticipant));
             }
         }else{
-            throw new NotImplementedException("End game state not implemented");
+            stateContext.setNextState(new EndState(stateContext, new VeggieScorer()));
         }
         stateContext.executeNextState();
 

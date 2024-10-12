@@ -20,7 +20,7 @@ public class Client {
 
     private void start() throws Exception {
         String nextMessage = "";
-        while (!nextMessage.contains("winner")) {
+        while (!nextMessage.contains("GAME OVER")) {
             nextMessage = (String) inFromServer.readObject();
             System.out.println(nextMessage);
             if (nextMessage.contains("Take") || nextMessage.contains("into")) {
@@ -28,6 +28,7 @@ public class Client {
                 outToServer.writeObject(in.nextLine());
             }
         }
+        close();
     }
 
     public void close() throws Exception {

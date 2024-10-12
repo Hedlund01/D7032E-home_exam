@@ -6,12 +6,16 @@ import game.score.IScorer;
 import game.score.VeggieScorer;
 import game.state.common.GameState;
 import game.state.common.StateContext;
+import org.apache.logging.log4j.CloseableThreadContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import player.Bot;
 import player.Participant;
 
 import java.util.ArrayList;
 
 public class VeggieBotTurnState extends GameState {
+    private final Logger logger = LogManager.getLogger();
     private final Bot bot;
     private final IScorer scorer = new VeggieScorer();
 
@@ -22,41 +26,52 @@ public class VeggieBotTurnState extends GameState {
 
     @Override
     public void executeState() {
-        int choice = (int) (Math.random() * 2);
+        try (final CloseableThreadContext.Instance ctc = CloseableThreadContext.put("botID", Integer.toString(bot.getPlayerID()))
 
-        switch (choice) {
-            case 0:
-                var buyPointCardSuccess = buyPointCard();
-                if (!buyPointCardSuccess) {
-                    buyVeggieCards();
-                }
-                break;
-            case 1:
-                var buyVeggieCardsSuccess = buyVeggieCards();
-                if (!buyVeggieCardsSuccess) {
-                    buyPointCard();
-                }
-                break;
-            default:
-                throw new FatalGameErrorException("Bot Choice not implemented");
+        ) {
+            logger.info("Bot is taking its turn");
+            int choice = (int) (Math.random() * 2);
+
+            switch (choice) {
+                case 0:
+                    var buyPointCardSuccess = buyPointCard();
+                    if (!buyPointCardSuccess) {
+                        buyVeggieCards();
+                    }
+                    break;
+                case 1:
+                    var buyVeggieCardsSuccess = buyVeggieCards();
+                    if (!buyVeggieCardsSuccess) {
+                        buyPointCard();
+                    }
+                    break;
+                default:
+                    throw new FatalGameErrorException("Bot Choice not implemented");
+            }
+
+            stateContext.sendToAllPlayers("player " + bot.getPlayerID() + "'s hand is now: \n" + bot.getHandString() + "\n");
         }
-
-
     }
 
     private boolean buyVeggieCards() {
+        logger.trace("Bot is trying to buy veggie cards");
         int cardsPicked = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j <= 1; j++) {
 
-                if (market.getVeggieCard(i, j) != null && cardsPicked < 2) {
-                    bot.addCardToHand(market.buyVeggieCard(i, j));
+                if (market.getFaceCard(i, j) != null && cardsPicked < 2) {
+                    bot.addCardToHand(market.buyFaceCard(i, j));
                     cardsPicked++;
                 }
             }
         }
-        return cardsPicked > 0;
-
+        if(cardsPicked > 0){
+            logger.trace("Bot successfully bought {} veggie cards", cardsPicked);
+            return true;
+        }else{
+            logger.trace("Bot failed to buy veggie cards");
+            return false;
+        }
     }
 
 
@@ -66,6 +81,7 @@ public class VeggieBotTurnState extends GameState {
      * @return true if a point card was successfully bought, false otherwise
      */
     private boolean buyPointCard() {
+        logger.trace("Bot is trying to buy a point card");
         int highestPointCardIndex = 0;
         int highestPointCard = 0;
         for (int i = 0; i < 3; i++) {
@@ -82,14 +98,17 @@ public class VeggieBotTurnState extends GameState {
         var card = market.getPointCard(highestPointCardIndex);
         if (card != null) {
             bot.addCardToHand(card);
+            logger.trace("Bot successfully bought a point card");
             return true;
         } else {
+            logger.trace("Bot failed to buy a point card");
             return false;
         }
     }
 
     @Override
-    public void executeNextStage() {
+    public void executeNextState() {
         stateContext.setNextState(new VeggieNextPlayerState(stateContext, bot));
+        stateContext.executeNextState();
     }
 }

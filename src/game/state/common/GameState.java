@@ -16,6 +16,6 @@ public abstract class GameState {
 
     public abstract void executeState();
 
-    public abstract void executeNextStage();
+    public abstract void executeNextState();
 
 }

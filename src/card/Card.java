@@ -1,11 +1,13 @@
 package card;
 
+import javax.accessibility.AccessibleRelation;
+
 public class Card<T extends Enum<T>> implements ICard {
     private final T face;
     private final String criteria;
     private boolean criteriaSideUp = true;
 
-    public Card(T face, String criteria) {
+    public  Card(T face, String criteria) {
         this.face = face;
         this.criteria = criteria;
     }
@@ -23,6 +25,8 @@ public class Card<T extends Enum<T>> implements ICard {
    public void setCriteriaSideUp(boolean criteriaSideUp) {
         this.criteriaSideUp = criteriaSideUp;
     }
+
+
 
     @Override
     public T getFace() {

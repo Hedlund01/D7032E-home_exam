@@ -1,5 +1,8 @@
 package card;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,12 +20,12 @@ public class VegetableCardFactory implements ICardFactory<Vegetable> {
     }
 
     /**
-     * Reads the cards from a JSON file and organizes them into decks.
+     * Reads the cards from a JSON file and organizes them into decks based on their faces
      *
      * @param path the path to the JSON file
      * @return a dictionary containing the decks of cards
      */
-    public Map<String, ArrayList<ICard>> getDecksFromFile(String path){
+    public Map<String, ArrayList<ICard>> getDecksOfFacesFromFile(String path){
         Map<String, ArrayList<ICard>> decks = new HashMap<>();
         try (InputStream fInputStream = new FileInputStream(path);
              Scanner scanner = new Scanner(fInputStream, StandardCharsets.UTF_8).useDelimiter("\\A")) {

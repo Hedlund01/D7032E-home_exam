@@ -1,6 +1,7 @@
 package market;
 
 import card.ICard;
+import exceptions.InvalidArgumentException;
 import exceptions.PileOutOfCardsException;
 
 import java.util.ArrayList;
@@ -57,15 +58,24 @@ public class Pile {
 
     protected ICard forceRemoveFaceCard(int index) {
         ICard ICard = faceCards[index];
-        faceCards[index] = pointCards.removeFirst();
-        if (faceCards[index] != null) {
-            faceCards[index].setCriteriaSideUp(false);
+        if(getPointCardCount() <= 0){
+            faceCards[index] = null;
+            return ICard;
         }
+        faceCards[index] = pointCards.removeFirst();
+        faceCards[index].setCriteriaSideUp(false);
         return ICard;
     }
 
     protected void addPointCard(ICard card) {
         pointCards.add(card);
+    }
+
+    protected void addFaceCard(ICard card, int index) throws InvalidArgumentException {
+        if(faceCards[index] != null){
+            throw new InvalidArgumentException("Face card already exists in this pile");
+        }
+        faceCards[index] = card;
     }
 
 

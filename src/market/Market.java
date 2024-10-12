@@ -2,13 +2,18 @@ package market;
 
 import card.ICard;
 import card.Vegetable;
+import exceptions.InvalidArgumentException;
 import exceptions.PileOutOfCardsException;
 import card.AbstractCardFactory;
 import card.ICardFactory;
+import org.apache.logging.log4j.CloseableThreadContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public abstract class Market<T extends Enum<T>> implements IMarket {
+    private Logger logger = LogManager.getLogger();
     protected ArrayList<Pile> piles = new ArrayList<Pile>();
     private final ICardFactory<T> cardFactory;
     private final Class<T> enumType;
@@ -20,13 +25,8 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
     }
 
 
-    /**
-     * Sets up the piles of cards for the market based on the number of players.
-     *
-     * @param nrOfPlayers the number of players
-     */
     public void setPiles(int nrOfPlayers, String path) {
-        Map<String, ArrayList<ICard>> decks = cardFactory.getDecksFromFile(path);
+        Map<String, ArrayList<ICard>> decks = cardFactory.getDecksOfFacesFromFile(path);
 
         //shuffle the decks
         for (var c : enumType.getEnumConstants()) {
@@ -62,61 +62,142 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
     }
 
 
-
-
     public ICard buyPointCard(int pileIndex) {
-        try {
-            return piles.get(pileIndex).removeFirstPointCard();
-        } catch (PileOutOfCardsException e) {
-            //remove from the bottom of the biggest of the other piles
-            Integer biggestPileIndex = _getBiggestPileThatHasGreaterThenOneCardIndex(pileIndex);
-            if (biggestPileIndex != null) {
-                try {
-                    return piles.get(biggestPileIndex).removeLastPointCard();
-                } catch (PileOutOfCardsException pileOutOfCardsException) {
-                    //should never happen
+        try (final CloseableThreadContext.Instance _ = CloseableThreadContext
+                .put("method", "buyPointCard")
+                .put("pileIndex", Integer.toString(pileIndex))
+        ) {
+
+            try {
+                logger.trace("Buying point card");
+                return piles.get(pileIndex).removeFirstPointCard();
+            } catch (PileOutOfCardsException e) {
+                logger.trace("Pile out of cards");
+                //remove from the bottom of the biggest of the other piles
+                Integer biggestPileIndex = _getBiggestPileThatHasGreaterThenOneCardIndex(pileIndex);
+                if (biggestPileIndex != null) {
+                    try {
+                        logger.trace("Removing point card from biggest pile {}", biggestPileIndex);
+                        return piles.get(biggestPileIndex).removeLastPointCard();
+                    } catch (PileOutOfCardsException pileOutOfCardsException) {
+                        //should never happen
+                        logger.error("Pile out of cards, after rebalancing from biggest pile");
+                        return null;
+                    }
+                } else { // we can't remove active point cards from other piles
+                    logger.trace("No other pile to take from");
                     return null;
                 }
-            } else { // we can't remove active point cards from other piles
-                return null;
             }
         }
     }
 
-    public ICard getPointCard(int pileIndex){
-        try {
-            return piles.get(pileIndex).getPointCard();
-        } catch (PileOutOfCardsException e) {
-            return null;
-        }
-    }
 
+    public ICard getPointCard(int pileIndex) {
+        try (final CloseableThreadContext.Instance _ = CloseableThreadContext
+                .put("method", "getPointCard")
+                .put("pileIndex", Integer.toString(pileIndex))
+        ) {
 
-    public ICard buyVeggieCard(int pileIndex, int cardIndex) {
-        try {
-            return piles.get(pileIndex).removeFaceCard(cardIndex);
-        } catch (PileOutOfCardsException e) {
-            //remove from the bottom of the biggest of the other piles
-            Integer biggestPileIndex = _getBiggestPileThatHasGreaterThenOneCardIndex(pileIndex);
-            if (biggestPileIndex != null) {
-                try {
-                    piles.get(biggestPileIndex).addPointCard(piles.get(pileIndex).removeLastPointCard());
-                    return piles.get(pileIndex).removeFaceCard(cardIndex);
-                } catch (PileOutOfCardsException pileOutOfCardsException) {
-                    //should never happen
+            try {
+                logger.trace("Getting point card");
+                return piles.get(pileIndex).getPointCard();
+            } catch (PileOutOfCardsException e) {
+                logger.trace("Pile out of cards");
+                //remove from the bottom of the biggest of the other piles
+                Integer biggestPileIndex = _getBiggestPileThatHasGreaterThenOneCardIndex(pileIndex);
+                if (biggestPileIndex != null) {
+                    try {
+                        logger.trace("Removing point card from biggest pile {}", biggestPileIndex);
+                        piles.get(pileIndex).addPointCard(piles.get(biggestPileIndex).removeLastPointCard());
+                        return getPointCard(pileIndex);
+                    } catch (PileOutOfCardsException pileOutOfCardsException) {
+                        //should never happen
+                        logger.error("Pile out of cards, after rebalancing from biggest pile");
+                        return null;
+                    }
+                } else { // we can't remove active point cards from other piles
+                    logger.trace("No other pile to take from");
                     return null;
                 }
-            } else { // we can't remove active point cards from other piles
-                return piles.get(pileIndex).forceRemoveFaceCard(cardIndex);
             }
         }
     }
 
-    public ICard getVeggieCard(int pileIndex, int cardIndex){
-        return piles.get(pileIndex).getFaceCard(cardIndex);
 
+    public ICard buyFaceCard(int pileIndex, int cardIndex) {
+        try (final CloseableThreadContext.Instance _ = CloseableThreadContext
+                .put("method", "buyFaceCard")
+                .put("pileIndex", Integer.toString(pileIndex))
+                .put("cardIndex", Integer.toString(cardIndex))
+        ) {
+            try {
+                logger.trace("Buying face card");
+                return piles.get(pileIndex).removeFaceCard(cardIndex);
+            } catch (PileOutOfCardsException e) {
+                logger.trace("Pile out of cards");
+                //remove from the bottom of the biggest of the other piles
+                Integer biggestPileIndex = _getBiggestPileThatHasGreaterThenOneCardIndex(pileIndex);
+                if (biggestPileIndex != null) {
+                    try {
+                        logger.trace("Removing face card from biggest pile {} and try to buy again", biggestPileIndex);
+                        piles.get(pileIndex).addPointCard(piles.get(biggestPileIndex).removeLastPointCard());
+
+                        return buyFaceCard(pileIndex, cardIndex);
+                    } catch (PileOutOfCardsException pileOutOfCardsException) {
+                        logger.error("Pile out of cards, after rebalancing from biggest pile");
+                        return null;
+                    }
+                } else { // we can't remove active point cards from other piles
+                    logger.trace("No other pile to take from");
+                    return piles.get(pileIndex).forceRemoveFaceCard(cardIndex);
+                }
+            }
+        }
     }
 
+
+    public ICard getFaceCard(int pileIndex, int cardIndex) {
+        try (final CloseableThreadContext.Instance _ = CloseableThreadContext
+                .put("method", "getFaceCard")
+                .put("pileIndex", Integer.toString(pileIndex))
+                .put("cardIndex", Integer.toString(cardIndex))
+        ) {
+            logger.trace("Buying face card");
+            if (piles.get(pileIndex).getFaceCard(cardIndex) == null) {
+                logger.trace("Pile out of cards");
+                //remove from the bottom of the biggest of the other piles
+                Integer biggestPileIndex = _getBiggestPileThatHasGreaterThenOneCardIndex(pileIndex);
+                ICard card = null;
+                if (biggestPileIndex != null) {
+                    try {
+                        logger.trace("Removing face card from biggest pile {} and try to buy again", biggestPileIndex);
+                        card = piles.get(biggestPileIndex).removeLastPointCard();
+                        card.setCriteriaSideUp(false);
+                        piles.get(pileIndex).addFaceCard(card, cardIndex);
+                        return getFaceCard(pileIndex, cardIndex);
+                    } catch (PileOutOfCardsException pileOutOfCardsException) {
+                        logger.error("Pile out of cards, after rebalancing from biggest pile");
+                        return null;
+                    } catch (InvalidArgumentException e) {
+                        logger.warn("Invalid argument exception when setting new face card", e);
+                        if(card != null){
+                            logger.warn("Adding point card back to the original pile");
+                            card.setCriteriaSideUp(true);
+                            piles.get(biggestPileIndex).addPointCard(card);
+                        }
+                        return null;
+                    }
+                } else { // we can't remove active point cards from other piles
+                    logger.trace("No other pile to take from");
+                    return piles.get(pileIndex).forceRemoveFaceCard(cardIndex);
+                }
+            }else{
+                return piles.get(pileIndex).getFaceCard(cardIndex);
+            }
+        }
+
+    }
 
 
     private Integer _getBiggestPileThatHasGreaterThenOneCardIndex(int exceptIndex) {
@@ -134,11 +215,7 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
         return biggestPileIndex;
     }
 
-    /**
-     * Checks whether there are any cards left in the market.
-     *
-     * @return True if all piles are empty, False if at least one pile has a card.
-     */
+
     @Override
     public boolean isAllPilesEmpty() {
         //Check if all piles are empty if one has a card return false
@@ -157,6 +234,20 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
      */
     private void _shuffleDeck(ArrayList<ICard> deck) {
         Collections.shuffle(deck);
+    }
+
+
+    public int countTotalVisibleFaceCards() {
+        int count = 0;
+        for (Pile pile : piles) {
+            if (pile.getFaceCard(0) != null) {
+                count++;
+            }
+            if (pile.getFaceCard(1) != null) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }

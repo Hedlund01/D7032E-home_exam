@@ -16,7 +16,7 @@ public class VeggieInitState extends GameState {
     }
 
     @Override
-    public void executeNextStage() {
+    public void executeNextState() {
         Participant initParticipant = participants.get((int) (Math.random() * participants.size()));
         stateContext.setNextState(new VeggieNextPlayerState(stateContext, initParticipant));
         stateContext.executeNextState();

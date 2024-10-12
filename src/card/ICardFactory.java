@@ -7,5 +7,5 @@ public interface ICardFactory<E extends Enum<E>> {
 
     ICard createCard(E face, String criteria);
 
-    Map<String, ArrayList<ICard>> getDecksFromFile(String path);
+    Map<String, ArrayList<ICard>> getDecksOfFacesFromFile(String path);
 }
