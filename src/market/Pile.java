@@ -68,6 +68,7 @@ public class Pile {
     }
 
     protected void addPointCard(ICard card) {
+        card.setCriteriaSideUp(true);
         pointCards.add(card);
     }
 
@@ -75,6 +76,7 @@ public class Pile {
         if(faceCards[index] != null){
             throw new InvalidArgumentException("Face card already exists in this pile");
         }
+        card.setCriteriaSideUp(false);
         faceCards[index] = card;
     }
 

@@ -59,22 +59,16 @@ public abstract class Participant  {
         return count;
     }
 
-    public void setCriteraSideDown(int index){
+    public void setCriteriaSideDown(int index){
         hand.get(index).setCriteriaSideUp(false);
     }
 
     public int countFaceCardsInHand(){
-        return hand.size() - countCriteriaCardsInHand();
+        return countFaceCards(hand);
     }
 
     public <T extends Enum<T>> int  countFaceCardsInHand(T face){
-        int count = 0;
-        for(ICard card : hand){
-            if(card.getFace() == face){
-                count++;
-            }
-        }
-        return count;
+        return countFaceCards(face, hand);
     }
 
     public static <T extends Enum<T>> int  countFaceCards(T face, ArrayList<ICard> hand){

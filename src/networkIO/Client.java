@@ -15,7 +15,6 @@ public class Client {
         this.outToServer = new ObjectOutputStream(socket.getOutputStream());
         this.inFromServer = new ObjectInputStream(socket.getInputStream());
         start();
-
     }
 
     private void start() throws Exception {

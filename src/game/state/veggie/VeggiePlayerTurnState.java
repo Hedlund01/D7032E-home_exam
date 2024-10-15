@@ -69,7 +69,7 @@ public class VeggiePlayerTurnState extends GameState {
                 String choice = player.readMessage();
                 if (choice.matches("\\d")) {
                     int cardIndex = Integer.parseInt(choice);
-                    player.setCriteraSideDown(cardIndex);
+                    player.setCriteriaSideDown(cardIndex);
                 }
             }
 

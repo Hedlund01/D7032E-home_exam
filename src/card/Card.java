@@ -1,7 +1,5 @@
 package card;
 
-import javax.accessibility.AccessibleRelation;
-
 public class Card<T extends Enum<T>> implements ICard {
     private final T face;
     private final String criteria;

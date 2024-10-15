@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class VegetableCardFactory implements ICardFactory<Vegetable> {
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public VegetableCard createCard(Vegetable face, String criteria) {
@@ -26,6 +27,7 @@ public class VegetableCardFactory implements ICardFactory<Vegetable> {
      * @return a dictionary containing the decks of cards
      */
     public Map<String, ArrayList<ICard>> getDecksOfFacesFromFile(String path){
+        logger.info("Reading card manifest from file: {}", path);
         Map<String, ArrayList<ICard>> decks = new HashMap<>();
         try (InputStream fInputStream = new FileInputStream(path);
              Scanner scanner = new Scanner(fInputStream, StandardCharsets.UTF_8).useDelimiter("\\A")) {
@@ -56,7 +58,7 @@ public class VegetableCardFactory implements ICardFactory<Vegetable> {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error reading card manifest from file: {}. - Error: {}", path, e.getMessage());
         }
         return decks;
     }

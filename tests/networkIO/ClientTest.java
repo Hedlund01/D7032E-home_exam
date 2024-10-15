@@ -1,6 +1,5 @@
-package test.networkIO;
+package networkIO;
 
-import networkIO.Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -18,7 +17,7 @@ class ClientTest {
     void clientReceivesGameOverMessage() throws Exception {
         new Thread(() -> {
             try {
-                ServerSocket mockSocket = new ServerSocket(4499);
+                ServerSocket mockSocket = new ServerSocket(8767);
                 Socket clientSocket = mockSocket.accept();
                 ObjectOutputStream outToClient = new ObjectOutputStream(clientSocket.getOutputStream());
                 outToClient.writeObject("GAME OVER");
@@ -26,7 +25,8 @@ class ClientTest {
                 System.out.println(e.getMessage());
             }
         }).start();
-        Client client = new Client("127.0.0.1", 4499);
+
+        Client client = new Client("127.0.0.1", 8767);
 
         assertTrue(true);
     }

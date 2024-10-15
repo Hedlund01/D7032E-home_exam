@@ -1,11 +1,8 @@
-package test.networkIO;
+package networkIO;
 
 import exceptions.TooFewPlayersExcpetion;
 import exceptions.TooManyPlayerException;
-import networkIO.Client;
-import networkIO.Server;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import player.Bot;
 import player.Participant;
 import player.Player;
@@ -22,7 +19,7 @@ class ServerTest {
         AtomicReference<ArrayList<Participant>> participants = new AtomicReference<>();
         Thread x = new Thread(() -> {
             try {
-                participants.setRelease(new Server(4499).startAcceptingConnections(1, 1));
+                participants.setRelease(new Server(1234).startAcceptingConnections(1, 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -33,7 +30,7 @@ class ServerTest {
 
         new Thread(() -> {
             try {
-                new Client("127.0.0.1", 4499);
+                new Client("127.0.0.1", 1234);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -54,7 +51,7 @@ class ServerTest {
 
     @Test
     void serverRejectsWhenFewerThen2Players() {
-        Server server = new Server(44999);
+        Server server = new Server(2345);
         assertAll(() -> {
             assertThrows(TooFewPlayersExcpetion.class, () -> server.startAcceptingConnections(0, 0));
             assertThrows(TooFewPlayersExcpetion.class, () -> server.startAcceptingConnections(0, 1));
@@ -64,7 +61,7 @@ class ServerTest {
 
     @Test
     void serverRejectsWhenTooManyPlayers(){
-        Server server = new Server(4499);
+        Server server = new Server(3456);
         assertAll(() -> {
             assertThrows(TooManyPlayerException.class, () -> server.startAcceptingConnections(7, 0));
             assertThrows(TooManyPlayerException.class, () -> server.startAcceptingConnections(6, 1));

@@ -12,7 +12,7 @@ public class VeggieInitState extends GameState {
 
     @Override
     public void executeState() {
-        market.setPiles(participants.size(), "resources/PointSaladManifest.json");
+        stateContext.getMarket().setPiles(participants.size(), "resources/PointSaladManifest.json");
     }
 
     @Override

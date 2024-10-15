@@ -5,9 +5,9 @@ import market.IMarket;
 import java.util.ArrayList;
 
 public abstract class GameState {
+    protected StateContext stateContext;
     protected IMarket market;
     protected ArrayList<Participant> participants;
-    protected StateContext stateContext;
     public GameState( StateContext stateContext) {
         this.stateContext = stateContext;
         this.market = stateContext.getMarket();
