@@ -2,7 +2,6 @@ package card;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,11 +11,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class VegetableCardFactory implements ICardFactory<Vegetable> {
+public class VegetableCardFactory implements ICardFactory<Vegetable>{
     private static final Logger logger = LogManager.getLogger();
 
-    @Override
-    public VegetableCard createCard(Vegetable face, String criteria) {
+    public ICard createCard(Vegetable face, String criteria) {
         return new VegetableCard(face, criteria);
     }
 

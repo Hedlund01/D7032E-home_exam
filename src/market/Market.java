@@ -13,10 +13,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 
 public abstract class Market<T extends Enum<T>> implements IMarket {
-    private Logger logger = LogManager.getLogger();
-    protected ArrayList<Pile> piles = new ArrayList<Pile>();
-    private final ICardFactory<T> cardFactory;
-    private final Class<T> enumType;
+    private final Logger logger = LogManager.getLogger();
+    protected ArrayList<IPile> piles = new ArrayList<>();
+    protected final ICardFactory<T> cardFactory;
+    protected final Class<T> enumType;
 
     public Market(Class<T> enumType) {
         this.enumType = enumType;
@@ -25,41 +25,7 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
     }
 
 
-    public void setPiles(int nrOfPlayers, String path) {
-        Map<String, ArrayList<ICard>> decks = cardFactory.getDecksOfFacesFromFile(path);
-
-        //shuffle the decks
-        for (var c : enumType.getEnumConstants()) {
-            _shuffleDeck(decks.get(c.toString()));
-        }
-        int cardsPerVeggie = nrOfPlayers / 2 * 6;
-
-        ArrayList<ICard> deck = new ArrayList<>();
-        for (int i = 0; i < cardsPerVeggie; i++) {
-            for (var c : Vegetable.values()) {
-                deck.add(decks.get(c.toString()).removeFirst());
-            }
-        }
-
-        _shuffleDeck(deck);
-
-        //divide the deck into 3 piles
-        ArrayList<ICard> pile1 = new ArrayList<>();
-        ArrayList<ICard> pile2 = new ArrayList<>();
-        ArrayList<ICard> pile3 = new ArrayList<>();
-        for (int i = 0; i < deck.size(); i++) {
-            if (i % 3 == 0) {
-                pile1.add(deck.get(i));
-            } else if (i % 3 == 1) {
-                pile2.add(deck.get(i));
-            } else {
-                pile3.add(deck.get(i));
-            }
-        }
-        piles.add(new Pile(pile1));
-        piles.add(new Pile(pile2));
-        piles.add(new Pile(pile3));
-    }
+    public abstract void setPiles(int nrOfPlayers, String path);
 
 
     public ICard buyPointCard(int pileIndex) {
@@ -141,7 +107,8 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
                 if (biggestPileIndex != null) {
                     try {
                         logger.trace("Removing face card from biggest pile {} and try to buy again", biggestPileIndex);
-                        piles.get(pileIndex).addPointCard(piles.get(biggestPileIndex).removeLastPointCard());
+                        var card = piles.get(biggestPileIndex).removeLastPointCard();
+                        piles.get(pileIndex).addPointCard(card);
 
                         return buyFaceCard(pileIndex, cardIndex);
                     } catch (PileOutOfCardsException pileOutOfCardsException) {
@@ -163,7 +130,7 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
                 .put("pileIndex", Integer.toString(pileIndex))
                 .put("cardIndex", Integer.toString(cardIndex))
         ) {
-            logger.trace("Buying face card");
+            logger.trace("Getting face card");
             if (piles.get(pileIndex).getFaceCard(cardIndex) == null) {
                 logger.trace("Pile out of cards");
                 //remove from the bottom of the biggest of the other piles
@@ -219,7 +186,7 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
     @Override
     public boolean isAllPilesEmpty() {
         //Check if all piles are empty if one has a card return false
-        for (Pile pile : piles) {
+        for (IPile pile : piles) {
             if (!pile.isEmpty()) {
                 return false;
             }
@@ -227,25 +194,13 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
         return true;
     }
 
-    /**
-     * Shuffles the given deck of cards.
-     *
-     * @param deck the deck of cards to shuffle
-     */
-    private void _shuffleDeck(ArrayList<ICard> deck) {
-        Collections.shuffle(deck);
-    }
+
 
 
     public int countTotalVisibleFaceCards() {
         int count = 0;
-        for (Pile pile : piles) {
-            if (pile.getFaceCard(0) != null) {
-                count++;
-            }
-            if (pile.getFaceCard(1) != null) {
-                count++;
-            }
+        for (IPile pile : piles) {
+            count += pile.getFaceCardCount();
         }
         return count;
     }

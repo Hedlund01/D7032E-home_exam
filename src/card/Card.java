@@ -1,5 +1,8 @@
 package card;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Card<T extends Enum<T>> implements ICard {
     private final T face;
     private final String criteria;
@@ -39,6 +42,15 @@ public class Card<T extends Enum<T>> implements ICard {
     @Override
     public boolean isCriteriaSideUp() {
         return criteriaSideUp;
+    }
+
+    /**
+     * Shuffles the given deck of cards.
+     *
+     * @param deck the deck of cards to shuffle
+     */
+    public static void shuffleDeck(ArrayList<ICard> deck) {
+        Collections.shuffle(deck);
     }
 
 }

@@ -16,7 +16,7 @@ class VegetableCardFactoryTest {
 
     @Test
     void createCard() {
-        VegetableCard card = factory.createCard(Vegetable.CARROT, "CARROT/3");
+        ICard card = factory.createCard(Vegetable.CARROT, "CARROT/3");
 
         assertAll(() ->{
             assertNotNull(card);

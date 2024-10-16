@@ -3,9 +3,9 @@ package card;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface ICardFactory<E extends Enum<E>> {
+public interface ICardFactory<T extends Enum<T>> {
 
-    ICard createCard(E face, String criteria);
+     ICard createCard(T face, String criteria);
 
     Map<String, ArrayList<ICard>> getDecksOfFacesFromFile(String path);
 }

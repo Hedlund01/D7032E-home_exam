@@ -11,4 +11,5 @@ public interface ICard{
     String getCriteria();
 
     boolean isCriteriaSideUp();
+
 }
