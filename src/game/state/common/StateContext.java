@@ -21,7 +21,6 @@ public class StateContext {
 
     public StateContext(ArrayList<Participant> participants) {
         this.participants = participants;
-        setNextState(new VeggieInitState(this));
     }
 
     public void setNextState(GameState currentState) {
