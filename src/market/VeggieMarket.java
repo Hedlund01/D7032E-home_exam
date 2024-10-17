@@ -44,7 +44,7 @@ public class VeggieMarket extends Market<Vegetable> {
      * @param path
      */
     @Override
-    public void setPiles(int nrOfPlayers, String path) {
+    public void initializeMarket(int nrOfPlayers, String path) {
         Map<String, ArrayList<ICard>> decks = cardFactory.getDecksOfFacesFromFile(path);
 
         //shuffle the decks

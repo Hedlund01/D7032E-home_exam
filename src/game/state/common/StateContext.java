@@ -1,10 +1,6 @@
 package game.state.common;
 
-import exceptions.NotImplementedException;
-import game.state.veggie.VeggieInitState;
 import market.IMarket;
-import market.VeggieMarket;
-import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import player.Participant;
@@ -15,29 +11,25 @@ import java.util.ArrayList;
 public class StateContext {
 
     private final Logger logger = LogManager.getLogger();
-    private IMarket market = new VeggieMarket();
-    private ArrayList<Participant> participants;
-    private GameState nextState;
+    private final IMarket market;
+    private final ArrayList<Participant> participants;
+    private IGameState currentState;
 
-    public StateContext(ArrayList<Participant> participants) {
+    public StateContext(ArrayList<Participant> participants, IMarket market) {
         this.participants = participants;
+        this.market = market;
     }
 
-    public void setNextState(GameState currentState) {
-        this.nextState = currentState;
+    public void setState(IGameState state) {
+        currentState = state;
     }
 
-    public void executeNextState() {
 
-            if (nextState != null) {
-                logger.trace("Executing state {}", nextState.getClass().getSimpleName());
-                nextState.executeState();
-                nextState.executeNextState();
-            } else {
-                sendToAllPlayers("\n-------------------------------------- GAME OVER --------------------------------------\n");
-                logger.info("Game Over, exiting program");
-                System.exit(0);
-            }
+    public void execute(){
+        while (currentState != null) {
+            currentState.executeState();
+            currentState = currentState.getNextState();
+        }
     }
 
     public IMarket getMarket() {

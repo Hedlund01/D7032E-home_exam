@@ -24,8 +24,8 @@ class VeggieMarketTest {
 
 
     @Test
-    void setPilesFor2Players() {
-        market.setPiles(2, "resources/PointSaladManifest.json");
+    void initializeMarketFor2Players() {
+        market.initializeMarket(2, "resources/PointSaladManifest.json");
 
         Map<String, ArrayList<ICard>> decks = new HashMap<>();
 
@@ -79,8 +79,8 @@ class VeggieMarketTest {
     }
 
     @Test
-    void setPilesFor3Players() {
-        market.setPiles(3, "resources/PointSaladManifest.json");
+    void initializeMarketFor3Players() {
+        market.initializeMarket(3, "resources/PointSaladManifest.json");
 
         Map<String, ArrayList<ICard>> decks = new HashMap<>();
 
@@ -135,8 +135,8 @@ class VeggieMarketTest {
 
 
     @Test
-    void setPilesFor4Players() {
-        market.setPiles(4, "resources/PointSaladManifest.json");
+    void initializeMarketFor4Players() {
+        market.initializeMarket(4, "resources/PointSaladManifest.json");
 
         Map<String, ArrayList<ICard>> decks = new HashMap<>();
 
@@ -188,8 +188,8 @@ class VeggieMarketTest {
     }
 
     @Test
-    void setPilesFor5Players() {
-        market.setPiles(5, "resources/PointSaladManifest.json");
+    void initializeMarketFor5Players() {
+        market.initializeMarket(5, "resources/PointSaladManifest.json");
 
         Map<String, ArrayList<ICard>> decks = new HashMap<>();
 
@@ -241,8 +241,8 @@ class VeggieMarketTest {
     }
 
     @Test
-    void setPilesFor6Players() {
-        market.setPiles(6, "resources/PointSaladManifest.json");
+    void initializeMarketFor6Players() {
+        market.initializeMarket(6, "resources/PointSaladManifest.json");
 
         Map<String, ArrayList<ICard>> decks = new HashMap<>();
 
@@ -441,6 +441,45 @@ class VeggieMarketTest {
 
         assertEquals(2, market.countTotalVisibleFaceCards());
     }
+
+
+    /**
+     *
+     * This test is to check if the market will turn the last card in the pile to the table when
+     * a player buys the last two face cards corresponding to that point pile.
+     */
+    @Test
+    void turnCardToTableWhenOneCardLeftInPile() {
+        var cards = new ArrayList<ICard>();
+        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+
+        var cards2 = new ArrayList<ICard>();
+        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+
+        var cards3 = new ArrayList<ICard>();
+        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+
+        market.piles.add(new VeggiePile(cards));
+        market.piles.add(new VeggiePile(cards2));
+        market.piles.add(new VeggiePile(cards3));
+
+        market.buyFaceCard(0,0);
+        market.buyFaceCard(0,1);
+
+        assertAll(() -> {
+            assertNull(market.getPointCard(0));
+            assertNull(market.getFaceCard(0,1));
+            assertNotNull(market.getFaceCard(0,0));
+        });
+
+    }
+
 
     private boolean _roughlySameSize(ArrayList<IPile> piles, double toleranceFraction) {
         int totalCards = 0;

@@ -23,24 +23,20 @@ public class VeggieNextPlayerState extends GameState {
 
     @Override
     public void executeState() {
-        if(currentParticipant == null) {
-            nextParticipant = participants.get((int) (Math.random() * participants.size()));
-        }
         nextParticipant = participants.get((participants.indexOf(currentParticipant) + 1) % participants.size());
     }
 
     @Override
-    public void executeNextState() {
+    public GameState getNextState() {
+
         if(!market.isAllPilesEmpty()){
             if(nextParticipant instanceof Player) {
-                stateContext.setNextState(new VeggiePlayerTurnState( stateContext, (Player) nextParticipant));
+                return new VeggiePlayerTurnState( stateContext, (Player) nextParticipant);
             } else {
-                stateContext.setNextState(new VeggieBotTurnState(stateContext, nextParticipant));
+                return new VeggieBotTurnState(stateContext, nextParticipant);
             }
         }else{
-            stateContext.setNextState(new EndState(stateContext, new VeggieScorer()));
+            return new EndState(stateContext, new VeggieScorer());
         }
-        stateContext.executeNextState();
-
     }
 }

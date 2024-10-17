@@ -4,7 +4,7 @@ import player.Participant;
 import market.IMarket;
 import java.util.ArrayList;
 
-public abstract class GameState {
+public abstract class GameState implements IGameState {
     protected StateContext stateContext;
     protected IMarket market;
     protected ArrayList<Participant> participants;
@@ -16,6 +16,6 @@ public abstract class GameState {
 
     public abstract void executeState();
 
-    public abstract void executeNextState();
+    public abstract IGameState getNextState();
 
 }

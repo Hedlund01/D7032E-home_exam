@@ -1,24 +1,25 @@
 package game.state.veggie;
 
+import game.state.common.IGameState;
 import game.state.common.StateContext;
 import game.state.common.GameState;
 import player.Participant;
 
-public class VeggieInitState extends GameState {
+public class VeggieInitState implements IGameState {
 
+    private final StateContext stateContext;
     public VeggieInitState(StateContext stateContext) {
-        super(stateContext);
+        this.stateContext = stateContext;
     }
 
     @Override
     public void executeState() {
-        stateContext.getMarket().setPiles(participants.size(), "resources/PointSaladManifest.json");
+        stateContext.getMarket().initializeMarket(stateContext.getParticipants().size(), "resources/PointSaladManifest.json");
     }
 
     @Override
-    public void executeNextState() {
-        Participant initParticipant = participants.get((int) (Math.random() * participants.size()));
-        stateContext.setNextState(new VeggieNextPlayerState(stateContext, initParticipant));
-        stateContext.executeNextState();
+    public GameState getNextState() {
+        Participant initParticipant = stateContext.getParticipants().get((int) (Math.random() * stateContext.getParticipants().size()));
+        return new VeggieNextPlayerState(stateContext, initParticipant);
     }
 }

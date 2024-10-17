@@ -25,7 +25,7 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
     }
 
 
-    public abstract void setPiles(int nrOfPlayers, String path);
+    public abstract void initializeMarket(int nrOfPlayers, String path);
 
 
     public ICard buyPointCard(int pileIndex) {
@@ -47,7 +47,7 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
                         return piles.get(biggestPileIndex).removeLastPointCard();
                     } catch (PileOutOfCardsException pileOutOfCardsException) {
                         //should never happen
-                        logger.error("Pile out of cards, after rebalancing from biggest pile");
+                        logger.warn("Pile out of cards, after rebalancing from biggest pile");
                         return null;
                     }
                 } else { // we can't remove active point cards from other piles

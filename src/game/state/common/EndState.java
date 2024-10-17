@@ -52,9 +52,8 @@ public class EndState extends GameState {
     }
 
     @Override
-    public void executeNextState() {
-        stateContext.setNextState(null);
-        stateContext.executeNextState();
+    public IGameState getNextState() {
+        return null;
     }
 
 

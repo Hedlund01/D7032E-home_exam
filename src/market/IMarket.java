@@ -10,7 +10,7 @@ public interface IMarket {
      *
      * @param nrOfPlayers the number of players
      */
-    void setPiles(int nrOfPlayers, String path);
+    void initializeMarket(int nrOfPlayers, String path);
 
     /**
      * Buys a point card from the specified pile.

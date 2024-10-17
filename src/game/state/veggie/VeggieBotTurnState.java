@@ -107,8 +107,7 @@ public class VeggieBotTurnState extends GameState {
     }
 
     @Override
-    public void executeNextState() {
-        stateContext.setNextState(new VeggieNextPlayerState(stateContext, bot));
-        stateContext.executeNextState();
+    public GameState getNextState() {
+        return new VeggieNextPlayerState(stateContext, bot);
     }
 }
