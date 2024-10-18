@@ -1,6 +1,8 @@
 package game.state.common;
 
 import game.score.IScorer;
+import networkIO.commands.send.display.DisplayParticipantHandAndScoreCommand;
+import networkIO.commands.send.system.TerminateCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +39,7 @@ public class EndState extends GameState {
                     var p = (Player) participant;
                     if (participant.getPlayerID() == winnerID) {
                         logger.info("Player {} is the winner with a score of {}", winnerID, scores.get(winnerID));
-                        ((Player) participant).sendMessage("\nCongratulations! You are the winner with a score of " + scores.get(winnerID) + "\n");
+                        p.sendCommand(new DisplayParticipantHandAndScoreCommand(p.getName(), scores.get(winnerID), p.getHand(), true));
                     } else {
                         p.sendCommand(new DisplayParticipantHandAndScoreCommand(p.getName(), scores.get(participant.getPlayerID()), p.getHand(), false));
                     }

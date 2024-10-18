@@ -30,7 +30,7 @@ class ServerTest {
 
         new Thread(() -> {
             try {
-                new Client("127.0.0.1", 1234);
+                new ConsoleClient("127.0.0.1", 1234);
             } catch (Exception e) {
                 e.printStackTrace();
             }

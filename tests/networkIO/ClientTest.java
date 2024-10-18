@@ -1,5 +1,6 @@
 package networkIO;
 
+import networkIO.commands.send.system.TerminateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -20,13 +21,13 @@ class ClientTest {
                 ServerSocket mockSocket = new ServerSocket(8767);
                 Socket clientSocket = mockSocket.accept();
                 ObjectOutputStream outToClient = new ObjectOutputStream(clientSocket.getOutputStream());
-                outToClient.writeObject("GAME OVER");
+                outToClient.writeObject(new TerminateCommand());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }).start();
 
-        Client client = new Client("127.0.0.1", 8767);
+        Client client = new ConsoleClient("127.0.0.1", 8767);
 
         assertTrue(true);
     }

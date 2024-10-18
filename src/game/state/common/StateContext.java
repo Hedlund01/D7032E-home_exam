@@ -41,10 +41,11 @@ public class StateContext {
         return participants;
     }
 
-    public void sendToAllPlayers(String message) {
+
+    public void sendCommandToAllPlayers(ICommand command) {
         for (Participant player : participants) {
             if (player instanceof Player) {
-                ((Player) player).sendMessage(message);
+                ((Player) player).sendCommand(command);
             }
         }
     }
