@@ -64,7 +64,7 @@ public abstract class Participant {
     public static <T extends Enum<T>> int countFaceCards(T face, ArrayList<ICard> hand) {
         int count = 0;
         for (ICard card : hand) {
-            if (card.getFace() == face) {
+            if (card.getFace() == face && !card.isCriteriaSideUp()) {
                 count++;
             }
         }

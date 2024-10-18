@@ -35,7 +35,7 @@ public class VeggieScorer implements IScorer {
                     //ID3, ID4, ID5, ID6, ID7, ID8, ID9, ID10, ID11, ID12, ID13, ID14, ID15, ID16, ID17
 
                     if (criteria.contains("+")) { //ID5, ID6, ID7, ID11, ID12, ID13
-                        score+= handleAdditionCriteria(criteria, currentParticipant.getHand());
+                        score+= handleAdditionCriteria(criteria, hand);
                     } else if (criteriaParts[0].contains("=")) { //ID3, ID4, ID8, ID9, ID10, ID14, ID15, ID16, ID17
                         score += handleEqualCriteria(criteriaParts, hand);
                     } else {
@@ -147,6 +147,7 @@ private int handleAdditionCriteria(String criteria, ArrayList<ICard> hand) {
         for (Participant participant : participants) {
             if (participant.getPlayerID() != currentParticipant.getPlayerID()) {
                 int participantVegCount = participant.countFaceCardsInHand(Vegetable.valueOf(veg));
+                //[TODO] should check if the participant played after the current participant, if so current participant should not get the points.
                 if (criteria.contains("MOST") && participantVegCount > currentParticipantsVegCount) {
                     return 0;
                 } else if (criteria.contains("FEWEST") && participantVegCount < currentParticipantsVegCount) {
@@ -225,14 +226,24 @@ private int handleAdditionCriteria(String criteria, ArrayList<ICard> hand) {
             if (participant.getPlayerID() != currentParticipant.getPlayerID()) {
                 int participantFaceCards = participant.countFaceCardsInHand();
                 if (criteria.contains("MOST")) {
-                    if (participantFaceCards > currentParticipantFaceCards) {
-                        return 0;
+                    if (participantFaceCards >= currentParticipantFaceCards) {
+                        //[TODO] should check if the participant played after the current participant, if so current participant should not get the points.
+                        if(participantFaceCards == currentParticipantFaceCards){
+                            return 0;
+                        }else{
+                            break;
+                        }
                     } else {
                         break;
                     }
                 } else if (criteria.contains("LEAST")) {
-                    if (participantFaceCards < currentParticipantFaceCards) {
-                        return 0;
+                    if (participantFaceCards <= currentParticipantFaceCards) {
+                        //[TODO] should check if the participant played after the current participant, if so current participant should not get the points.
+                        if(participantFaceCards == currentParticipantFaceCards) {
+                            return 0;
+                        }else{
+                            break;
+                        }
                     } else {
                         break;
                     }
