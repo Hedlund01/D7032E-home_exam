@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/htmlReport" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -24,5 +25,6 @@
     </orderEntry>
     <orderEntry type="library" name="apache.logging.log4j.core" level="project" />
     <orderEntry type="library" name="mockito.core" level="project" />
+    <orderEntry type="library" name="google.code.gson" level="project" />
   </component>
 </module>

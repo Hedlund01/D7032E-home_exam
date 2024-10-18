@@ -1,6 +1,7 @@
 package player;
 
 
+import networkIO.commands.ICommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,26 +25,15 @@ public class Player extends Participant {
 
 
 
-    public void sendMessage(Object message) {
-        if (!isBot()) {
-            try {
-                outToClient.writeObject(message);
-            } catch (Exception e) {
-                logger.error("Error sending message to player {}. Error: {}", getPlayerID(), e.getMessage());
-            }
-        }
-    }
 
-    public String readMessage() {
-        String word = "";
+    public void sendCommand(ICommand command) {
         if (!isBot()) {
-            try {
-                word = (String) inFromClient.readObject();
-            } catch (Exception e) {
-                logger.error("Error reading message from player {}. Error: {}", getPlayerID(), e.getMessage());
-            }
+           try {
+               outToClient.writeObject(command);
+              } catch (Exception e) {
+                logger.error("Error sending command to player {}. Error: {}", getPlayerID(), e.getMessage());
+           }
         }
-        return word;
     }
 
     @Override

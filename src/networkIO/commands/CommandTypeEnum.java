@@ -1,0 +1,10 @@
+package networkIO.commands;
+
+public enum CommandTypeEnum {
+    DISPLAY_MARKET,
+    DISPLAY_STRING,
+    TERMINATE,
+    ASk_CLIENT_TO_SEND_INPUT,
+    SEND_CLIENT_INPUT_TO_SERVER,
+    DISPLAY_CONNECTION_MESSAGE
+}
