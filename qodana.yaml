@@ -8,10 +8,10 @@ profile:
   name: qodana.starter
 #Enable inspections
 #include:
-#  - name: <SomeEnabledInspectionId>
+#  - playerName: <SomeEnabledInspectionId>
 #Disable inspections
 #exclude:
-#  - name: <SomeDisabledInspectionId>
+#  - playerName: <SomeDisabledInspectionId>
 #    paths:
 #      - <path/where/not/run/inspection>
 projectJDK: 23 #(Applied in CI/CD pipeline)

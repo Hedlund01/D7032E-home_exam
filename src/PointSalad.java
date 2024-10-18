@@ -1,6 +1,7 @@
 import card.Card;
 import card.ICard;
 import card.Vegetable;
+import game.state.common.SetParticipantNameState;
 import game.state.common.StateContext;
 import game.state.veggie.VeggieInitState;
 import market.VeggieMarket;
@@ -23,7 +24,7 @@ public class PointSalad {
             // Start accepting connections where args[1] is the number of players and args[2] is the number of bots
             players = server.startAcceptingConnections(Integer.parseInt(args[1]), Integer.parseInt(args[2]));
             StateContext game = new StateContext(players, new VeggieMarket());
-            game.setState(new VeggieInitState(game));
+            game.setState(new SetParticipantNameState(game, players.getFirst()));
             game.execute();
 
         } catch (IndexOutOfBoundsException e){

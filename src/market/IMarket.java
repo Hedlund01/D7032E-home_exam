@@ -2,6 +2,8 @@ package market;
 
 import card.ICard;
 
+import java.util.ArrayList;
+
 public interface IMarket {
 
     /**
@@ -46,12 +48,6 @@ public interface IMarket {
      */
     ICard getFaceCard(int pileIndex, int cardIndex);
 
-    /**
-     * Returns a string representation of the market, including point cards and veggie cards.
-     *
-     * @return a string representation of the market
-     */
-    String getDisplayString();
 
     /**
      * Checks whether there are any cards left in the market.
@@ -66,4 +62,7 @@ public interface IMarket {
      * @return the total number of visible face cards
      */
     int countTotalVisibleFaceCards();
+
+    ArrayList<ICard> getAllVisiblePointCards();
+    ArrayList<ICard> getAllVisibleFaceCards();
 }

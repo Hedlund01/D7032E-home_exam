@@ -1,6 +1,7 @@
 package game.state.common;
 
 import market.IMarket;
+import networkIO.commands.ICommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import player.Participant;

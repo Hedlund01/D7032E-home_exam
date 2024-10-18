@@ -2,7 +2,7 @@ package networkIO;
 
 import exceptions.TooFewPlayersExcpetion;
 import exceptions.TooManyPlayerException;
-import networkIO.commands.send.DisplayStringCommand;
+import networkIO.commands.send.display.DisplayConnectionMessageCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,17 +29,17 @@ public class Server {
     }
 
     public ArrayList<Participant> startAcceptingConnections(int players, int bots) {
-        try(final CloseableThreadContext.Instance ctc = CloseableThreadContext
+        try (final CloseableThreadContext.Instance ctc = CloseableThreadContext
                 .put("server", "acceptingConnections")
                 .put("nrOfPlayers", Integer.toString(players))
                 .put("nrOfBots", Integer.toString(bots))
         ) {
-            if(players + bots < 2) {
+            if (players + bots < 2) {
                 logger.error("Cannot start game with fewer than 2 players");
                 throw new TooFewPlayersExcpetion("Cannot start game with fewer than 2 players");
             }
 
-            if(players + bots > 6){
+            if (players + bots > 6) {
                 logger.error("Cannot start game with more than 6 players");
                 throw new TooManyPlayerException("Cannot start game with more than 6 players");
             }
@@ -76,7 +76,7 @@ public class Server {
                 if (!isBot) {
                     logger.info("Player connected");
                     Player player = new Player(playerId, connectionSocket, inFromClient, outToClient);
-                    player.sendCommand(new DisplayStringCommand("You connected to the server as player " + playerId + "\n"));
+                    player.sendCommand(new DisplayConnectionMessageCommand(player.getName(), player.getPlayerID()));
                     return player;
 
                 } else {

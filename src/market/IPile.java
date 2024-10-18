@@ -4,6 +4,8 @@ import card.ICard;
 import exceptions.InvalidArgumentException;
 import exceptions.PileOutOfCardsException;
 
+import java.util.ArrayList;
+
 public interface IPile {
     ICard getPointCard() throws PileOutOfCardsException;
 
@@ -26,4 +28,6 @@ public interface IPile {
     int getPointCardCount();
 
     int getFaceCardCount();
+
+    ArrayList<ICard> getAllVisibleFaceCards();
 }

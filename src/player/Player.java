@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class Player extends Participant {
     private static final Logger logger = LogManager.getLogger();
@@ -23,16 +24,39 @@ public class Player extends Participant {
         this.outToClient = outToClient;
     }
 
-
+    public void setReadTimeout(int timeout) {
+        try {
+            connection.setSoTimeout(timeout);
+        } catch (Exception e) {
+            logger.error("Error setting read timeout for player {}. Error: {}", getPlayerID(), e.getMessage());
+        }
+    }
 
 
     public void sendCommand(ICommand command) {
-        if (!isBot()) {
-           try {
-               outToClient.writeObject(command);
-              } catch (Exception e) {
-                logger.error("Error sending command to player {}. Error: {}", getPlayerID(), e.getMessage());
-           }
+        try {
+            outToClient.writeObject(command);
+            outToClient.reset();
+        } catch (Exception e) {
+            logger.error("Error sending command to player {}. Error: {}", getPlayerID(), e.getMessage());
+        }
+    }
+
+    public ICommand readCommand() {
+        try {
+            var input = inFromClient.readObject();
+            if (input instanceof ICommand) {
+                return (ICommand) input;
+            } else {
+                logger.error("Error reading command from player {}. Error: {}", getPlayerID(), "Command is not an instance of ICommand");
+                return null;
+            }
+        } catch (SocketTimeoutException e) {
+            logger.warn("Player {} did not respond in time", getPlayerID());
+            return null;
+        } catch (Exception e) {
+            logger.error("Error reading command from player {}. Error: {}", getPlayerID(), e.getMessage());
+            return null;
         }
     }
 

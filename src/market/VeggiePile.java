@@ -115,4 +115,12 @@ public class VeggiePile implements IPile {
     public int getFaceCardCount() {
         return faceCards[0] != null && faceCards[1] != null ? 2 : faceCards[0] == null && faceCards[1] == null ? 0 : 1;
     }
+
+    @Override
+    public ArrayList<ICard> getAllVisibleFaceCards() {
+        ArrayList<ICard> visibleCards = new ArrayList<>();
+        visibleCards.add(getFaceCard(0));
+        visibleCards.add(getFaceCard(1));
+        return visibleCards;
+    }
 }

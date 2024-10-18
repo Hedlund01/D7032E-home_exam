@@ -15,6 +15,8 @@ public class VeggieInitState implements IGameState {
     @Override
     public void executeState() {
         stateContext.getMarket().initializeMarket(stateContext.getParticipants().size(), "resources/PointSaladManifest.json");
+
+
     }
 
     @Override

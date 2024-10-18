@@ -4,6 +4,11 @@ import exceptions.InvalidArgumentException;
 import exceptions.NotEnoughCardsInMarketException;
 import game.state.common.StateContext;
 import game.state.common.GameState;
+import networkIO.commands.recive.SendClientInputToServerCommand;
+import networkIO.commands.send.display.DisplayErrorMessageCommand;
+import networkIO.commands.send.display.DisplayInvalidInputCommand;
+import networkIO.commands.send.game.AskFlipFaceCardCommand;
+import networkIO.commands.send.game.TakeTurnCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,46 +32,60 @@ public class VeggiePlayerTurnState extends GameState {
 
             logger.info("Player is taking its turn");
 
-            printStartInformation();
 
             int takenVeggies = 0;
 
             while (takenVeggies < 2) {
-                if(market.isAllPilesEmpty()){
+                if (market.isAllPilesEmpty()) {
                     break;
                 }
-                player.sendMessage(market.getDisplayString());
-                if(takenVeggies > 0){
-                    player.sendMessage("\nYou have taken " + takenVeggies + " vegetable cards.");
-                    player.sendMessage("Take " + (2 - takenVeggies) + " more vegetable cards.\n");
+                var pointCards = market.getAllVisiblePointCards();
+                var faceCards = market.getAllVisibleFaceCards();
+                var hand = player.getHand();
+                var cmdTest  = new TakeTurnCommand(pointCards, faceCards, hand, takenVeggies);
+
+                player.sendCommand(cmdTest);
+
+                String playerInput;
+                var command = player.readCommand();
+                if(command instanceof SendClientInputToServerCommand cmd){
+                    playerInput = cmd.message();
+                    logger.trace("Player input: {}", playerInput);
                 }else{
-                    player.sendMessage("\nTake either one point card (Syntax example: 2) or up to two vegetable cards (Syntax example: CF).\n");
+                    logger.error("Invalid command type, expected SendClientInputToServerCommand but got: {}", command);
+                    continue;
                 }
-                String playerInput = player.readMessage();
-                logger.trace("Player input: {}", playerInput);
+
+
                 if (playerInput.matches("[0-2]") && takenVeggies == 0) {
                     try {
                         buyPointCard(playerInput);
                         break;
                     } catch (InvalidArgumentException e) {
-                        player.sendMessage("\n" + e.getMessage() + "\n");
+                        player.sendCommand(new DisplayErrorMessageCommand(e.getMessage()));
                     }
                 } else if (playerInput.matches("[A-F]{2}") || playerInput.matches("[A-F]")) {
                     try {
                         takenVeggies += buyVeggieCards(playerInput);
                     } catch (InvalidArgumentException | NotEnoughCardsInMarketException e) {
-                        player.sendMessage("\n" + e.getMessage() + "\n");
+                        player.sendCommand(new DisplayErrorMessageCommand(e.getMessage()));
                     }
                 } else {
-                    player.sendMessage("\nInvalid input. Please enter a valid input. Either [A-F][A-F], [A-F] or [1-2].\n");
+                    player.sendCommand(new DisplayInvalidInputCommand());
                 }
             }
 
             logger.trace("Checking if player has criteria cards in hand");
             if (player.countCriteriaCardsInHand() > 0) {
                 //Give the player an option to turn a criteria card into a veggie card
-                player.sendMessage("\n" + player.getHandString() + "\nWould you like to turn a criteria card into a veggie card? (Syntax example: n or 2)");
-                String choice = player.readMessage();
+                player.sendCommand(new AskFlipFaceCardCommand(player.getHand()));
+                var inputCommand = player.readCommand();
+                String choice = "";
+                if(inputCommand instanceof SendClientInputToServerCommand cmd) {
+                    choice = cmd.message();
+                }else {
+                    logger.error("Invalid command type, expected SendClientInputToServerCommand but got: {}", inputCommand);
+                }
                 if (choice.matches("\\d")) {
                     int cardIndex = Integer.parseInt(choice);
                     player.setCriteriaSideDown(cardIndex);
@@ -88,8 +107,6 @@ public class VeggiePlayerTurnState extends GameState {
         }
         var pointCard = market.buyPointCard(Integer.parseInt(input));
         player.addCardToHand(pointCard);
-
-        player.sendMessage("\nYou have taken a card from pile " + input + " and added it to your hand.\n");
     }
 
     private int buyVeggieCards(String input) throws InvalidArgumentException, NotEnoughCardsInMarketException {
@@ -107,8 +124,8 @@ public class VeggiePlayerTurnState extends GameState {
         for (char c : input.toCharArray()) {
             int choice = c - 'A';
 
-            int pileIndex = (choice == 0 || choice == 3) ? 0 : (choice == 1 || choice == 4) ? 1 : (choice == 2 || choice == 5) ? 2 : -1;
-            int veggieIndex = (choice == 0 || choice == 1 || choice == 2) ? 0 : (choice == 3 || choice == 4 || choice == 5) ? 1 : -1;
+            int pileIndex = (choice == 0 || choice == 1) ? 0 : (choice == 2 || choice == 3) ? 1 : (choice == 4 || choice == 5) ? 2 : -1;
+            int veggieIndex = (choice == 0 || choice == 2 || choice == 4) ? 0 : (choice == 1 || choice == 3 || choice == 5) ? 1 : -1;
 
             veggieCardPileIndexes.add(pileIndex);
             veggieCardIndexes.add(veggieIndex);
@@ -116,10 +133,7 @@ public class VeggiePlayerTurnState extends GameState {
 
         for (int i = 0; i <= veggieCardIndexes.size() - 1; i++) {
             var veggieCard = market.buyFaceCard(veggieCardPileIndexes.get(i), veggieCardIndexes.get(i));
-            if (veggieCard == null) {
-                player.sendMessage("\n Veggie pile " + input.toCharArray()[i] + " is empty. Please choose another pile\n");
-            } else {
-                player.sendMessage("\nYou have taken a card from pile " + input.toCharArray()[i] + " and added it to your hand.\n");
+            if (veggieCard != null) {
                 player.addCardToHand(veggieCard);
                 boughtCards++;
             }
@@ -134,16 +148,16 @@ public class VeggiePlayerTurnState extends GameState {
 
 
     private void printStartInformation() {
-        player.sendMessage("\n\n****************************************************************\nIt's your turn! Your hand is:\n");
-        player.sendMessage(player.getHandString());
-        player.sendMessage("\nThe piles are: ");
+//        player.sendMessage("\n\n****************************************************************\nIt's your turn! Your hand is:\n");
+//        player.sendMessage(player.getHandString());
+//        player.sendMessage("\nThe piles are: ");
 
 
     }
 
 
     private void printEndInformation() {
-        player.sendMessage("\nYour turn is completed\n****************************************************************\n\n");
-        stateContext.sendToAllPlayers("player " + player.getPlayerID() + "'s hand is now: \n" + player.getHandString() + "\n");
+//        player.sendMessage("\nYour turn is completed\n****************************************************************\n\n");
+//        stateContext.sendToAllPlayers("player " + player.getPlayerID() + "'s hand is now: \n" + player.getHandString() + "\n");
     }
 }

@@ -204,4 +204,26 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
         return count;
     }
 
+    @Override
+    public ArrayList<ICard> getAllVisiblePointCards() {
+        ArrayList<ICard> visibleCards = new ArrayList<>();
+        for (IPile pile : piles) {
+            try{
+                visibleCards.add(pile.getPointCard());
+            } catch (PileOutOfCardsException _) {
+                //do nothing
+            }
+        }
+        return visibleCards;
+    }
+
+    @Override
+    public ArrayList<ICard> getAllVisibleFaceCards() {
+        ArrayList<ICard> visibleCards = new ArrayList<>();
+        for (IPile pile : piles) {
+            visibleCards.addAll(pile.getAllVisibleFaceCards());
+        }
+        return visibleCards;
+    }
+
 }

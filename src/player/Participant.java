@@ -6,8 +6,9 @@ import java.util.Map;
 
 import card.ICard;
 
-public abstract class Participant  {
+public abstract class Participant {
     private final int playerID;
+    private String name;
     private final ArrayList<ICard> hand = new ArrayList<ICard>();
 
     public Participant(int playerID) {
@@ -26,65 +27,54 @@ public abstract class Participant  {
         return hand;
     }
 
-    public String getHandString(){
-        StringBuilder handString = new StringBuilder();
-        handString.append("Criteria:\t");
-        for (ICard card : hand) {
-            if(card.isCriteriaSideUp() && card.getFace() != null){
-                handString.append(String.format("[%d] %s (%s)\t", hand.indexOf(card), card.getCriteria(), card.getFace().toString()));
-            }
+    public String getName() {
+        if (name != null) {
+            return name;
         }
-        handString.append("\nVegetables:\n");
-        Map<String, Integer> faceCount = new HashMap<>();
-        for(ICard card: hand){
-            if(!card.isCriteriaSideUp()){
-                faceCount.put(card.getFace().toString(), faceCount.getOrDefault(card.getFace().toString(), 0) + 1);
-            }
-        }
-        for (Map.Entry<String, Integer> entry : faceCount.entrySet()) {
-            handString.append(String.format("%s: %d\t", entry.getKey(), entry.getValue()));
-        }
+        return "Player " + playerID;
+    }
 
-        return handString.toString();
+    public void setName(String name) {
+        this.name = name;
     }
 
 
-    public int countCriteriaCardsInHand(){
+    public int countCriteriaCardsInHand() {
         int count = 0;
-        for(ICard card : hand){
-            if(card.isCriteriaSideUp()){
+        for (ICard card : hand) {
+            if (card.isCriteriaSideUp()) {
                 count++;
             }
         }
         return count;
     }
 
-    public void setCriteriaSideDown(int index){
+    public void setCriteriaSideDown(int index) {
         hand.get(index).setCriteriaSideUp(false);
     }
 
-    public int countFaceCardsInHand(){
+    public int countFaceCardsInHand() {
         return countFaceCards(hand);
     }
 
-    public <T extends Enum<T>> int  countFaceCardsInHand(T face){
+    public <T extends Enum<T>> int countFaceCardsInHand(T face) {
         return countFaceCards(face, hand);
     }
 
-    public static <T extends Enum<T>> int  countFaceCards(T face, ArrayList<ICard> hand){
+    public static <T extends Enum<T>> int countFaceCards(T face, ArrayList<ICard> hand) {
         int count = 0;
-        for(ICard card : hand){
-            if(card.getFace() == face){
+        for (ICard card : hand) {
+            if (card.getFace() == face) {
                 count++;
             }
         }
         return count;
     }
 
-    public static int  countFaceCards(ArrayList<ICard> hand){
+    public static int countFaceCards(ArrayList<ICard> hand) {
         int count = 0;
-        for(ICard card : hand){
-            if(!card.isCriteriaSideUp()){
+        for (ICard card : hand) {
+            if (!card.isCriteriaSideUp()) {
                 count++;
             }
         }
