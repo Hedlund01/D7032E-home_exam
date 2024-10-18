@@ -2,7 +2,7 @@ package market;
 
 import card.ICard;
 import card.Vegetable;
-import card.VegetableCard;
+import card.Card;
 import exceptions.PileOutOfCardsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -305,9 +305,9 @@ class VeggieMarketTest {
     @Test
     void buyPointCard() {
         var cards = new ArrayList<ICard>();
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
         market.piles = new ArrayList<>();
         market.piles.add(new VeggiePile(cards));
 
@@ -322,20 +322,20 @@ class VeggieMarketTest {
     @Test
     void buyPointCardTakeFromAnotherPile() {
         var cards1 = new ArrayList<ICard>();
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         var cards2 = new ArrayList<ICard>();
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
 
         var cards3 = new ArrayList<ICard>();
-        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards3.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards3.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         market.piles = new ArrayList<>();
         market.piles.add(new VeggiePile(cards1));
@@ -366,8 +366,8 @@ class VeggieMarketTest {
     @Test
     void buyFaceCard() {
         var cards = new ArrayList<ICard>();
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
         market.piles = new ArrayList<>();
         market.piles.add(new VeggiePile(cards));
 
@@ -383,15 +383,15 @@ class VeggieMarketTest {
     @Test
     void buyFaceCardTakeFromAnotherPile() {
         var cards1 = new ArrayList<ICard>();
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         var cards2 = new ArrayList<ICard>();
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards1.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards1.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
 
         var cards3 = new ArrayList<ICard>();
@@ -420,9 +420,9 @@ class VeggieMarketTest {
     void isAllPilesEmptyWhenNotEmpty() {
 
         var cards = new ArrayList<ICard>();
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         market.piles.add(new VeggiePile(cards));
 
@@ -433,9 +433,9 @@ class VeggieMarketTest {
     @Test
     void countTotalVisibleFaceCards() {
         var cards = new ArrayList<ICard>();
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         market.piles.add(new VeggiePile(cards));
 
@@ -451,19 +451,19 @@ class VeggieMarketTest {
     @Test
     void turnCardToTableWhenOneCardLeftInPile() {
         var cards = new ArrayList<ICard>();
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         var cards2 = new ArrayList<ICard>();
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards2.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards2.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         var cards3 = new ArrayList<ICard>();
-        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
-        cards3.add(new VegetableCard(Vegetable.CARROT, "TEST"));
+        cards3.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards3.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
+        cards3.add(new Card<Vegetable>(Vegetable.CARROT, "TEST"));
 
         market.piles.add(new VeggiePile(cards));
         market.piles.add(new VeggiePile(cards2));

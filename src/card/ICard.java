@@ -6,7 +6,7 @@ public interface ICard{
     void setCriteriaSideUp(boolean criteriaSideUp);
 
 
-    <T extends Enum<T>> T getFace();
+    <R extends Enum<R>> R getFace();
 
     String getCriteria();
 

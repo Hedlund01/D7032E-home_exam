@@ -11,11 +11,16 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class VegetableCardFactory implements ICardFactory<Vegetable>{
+public class VegetableCardFactory implements IConcreteCardFactory {
     private static final Logger logger = LogManager.getLogger();
 
-    public ICard createCard(Vegetable face, String criteria) {
-        return new VegetableCard(face, criteria);
+//    public ICard createCard(Vegetable face, String criteria) {
+//        return new VegetableCard(face, criteria);
+//    }
+
+    @Override
+    public <T extends Enum<T>> ICard createCard(T face, String criteria) {
+        return new Card<>(face, criteria);
     }
 
     /**

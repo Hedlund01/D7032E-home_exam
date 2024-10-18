@@ -1,11 +1,10 @@
 package market;
 
 import card.ICard;
-import card.Vegetable;
 import exceptions.InvalidArgumentException;
 import exceptions.PileOutOfCardsException;
-import card.AbstractCardFactory;
-import card.ICardFactory;
+import card.CardFactory;
+import card.IConcreteCardFactory;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,13 +14,13 @@ import java.util.*;
 public abstract class Market<T extends Enum<T>> implements IMarket {
     private final Logger logger = LogManager.getLogger();
     protected ArrayList<IPile> piles = new ArrayList<>();
-    protected final ICardFactory<T> cardFactory;
+    protected final IConcreteCardFactory cardFactory;
     protected final Class<T> enumType;
 
     public Market(Class<T> enumType) {
         this.enumType = enumType;
-        AbstractCardFactory abstractCardFactory = new AbstractCardFactory();
-        cardFactory = abstractCardFactory.getCardFactory(enumType.getTypeName());
+        CardFactory cardFactory = new CardFactory();
+        this.cardFactory = cardFactory.getCardFactory(enumType.getTypeName());
     }
 
 
