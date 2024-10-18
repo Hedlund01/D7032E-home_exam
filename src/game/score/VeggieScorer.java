@@ -71,6 +71,7 @@ public class VeggieScorer implements IScorer {
     /**
      * Handles criteria that contains "=" in it by checking if the current participant meets the criteria of
      * having an even or odd number of face cards of a certain face type and returns the points accordingly.
+     *
      * @param criteriaParts criteria to be evaluated
      * @param hand hand to be evaluated
      * @return Number of points according to the criteria

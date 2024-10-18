@@ -1,6 +1,8 @@
 package card;
 
-public interface ICard{
+import java.io.Serializable;
+
+public interface ICard extends Serializable {
     String toString();
 
     void setCriteriaSideUp(boolean criteriaSideUp);

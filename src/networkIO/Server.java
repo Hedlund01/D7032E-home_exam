@@ -2,6 +2,7 @@ package networkIO;
 
 import exceptions.TooFewPlayersExcpetion;
 import exceptions.TooManyPlayerException;
+import networkIO.commands.send.DisplayStringCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +43,7 @@ public class Server {
                 logger.error("Cannot start game with more than 6 players");
                 throw new TooManyPlayerException("Cannot start game with more than 6 players");
             }
+
             ArrayList<Participant> playerList = new ArrayList<>();
             int playerId = 1;
             // Accept players
@@ -74,7 +76,7 @@ public class Server {
                 if (!isBot) {
                     logger.info("Player connected");
                     Player player = new Player(playerId, connectionSocket, inFromClient, outToClient);
-                    player.sendMessage("You connected to the server as player " + playerId + "\n");
+                    player.sendCommand(new DisplayStringCommand("You connected to the server as player " + playerId + "\n"));
                     return player;
 
                 } else {
