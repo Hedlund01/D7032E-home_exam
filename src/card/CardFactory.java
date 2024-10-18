@@ -2,8 +2,8 @@ package card;
 
 import exceptions.NotImplementedException;
 
-public class AbstractCardFactory {
-    public  ICardFactory getCardFactory(String type) {
+public class CardFactory {
+    public IConcreteCardFactory getCardFactory(String type) {
         if (type.equals("card.Vegetable")) {
             return new VegetableCardFactory();
         } else if (type.equals("card.Point")) {
