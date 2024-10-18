@@ -6,7 +6,6 @@ import card.Vegetable;
 import org.junit.jupiter.api.Test;
 import player.Bot;
 import player.Participant;
-import player.Player;
 
 import java.util.ArrayList;
 

@@ -1,15 +1,13 @@
 package player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import card.ICard;
 
 public abstract class Participant {
     private final int playerID;
     private String name;
-    private final ArrayList<ICard> hand = new ArrayList<ICard>();
+    private final ArrayList<ICard> hand = new ArrayList<>();
 
     public Participant(int playerID) {
         this.playerID = playerID;
