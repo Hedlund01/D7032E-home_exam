@@ -1,11 +1,10 @@
 package game.state.veggie;
 
-import exceptions.NotImplementedException;
 import game.score.VeggieScorer;
 import game.state.common.EndState;
 import game.state.common.StateContext;
 import game.state.common.GameState;
-import org.apache.logging.log4j.CloseableThreadContext;
+import networkIO.commands.send.game.DisplayParticipantHandSendCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import player.Participant;
@@ -23,7 +22,22 @@ public class VeggieNextPlayerState extends GameState {
 
     @Override
     public void executeState() {
-        nextParticipant = participants.get((participants.indexOf(currentParticipant) + 1) % participants.size());
+        if(currentParticipant == null) {
+            nextParticipant = participants.get((int) (Math.random() * stateContext.getParticipants().size()));
+            nextParticipant.setTurnOrderIndex(0);
+        }else {
+            nextParticipant = participants.get((participants.indexOf(currentParticipant) + 1) % participants.size());
+
+            if(nextParticipant.getTurnOrderIndex() == null){
+                nextParticipant.setTurnOrderIndex(currentParticipant.getTurnOrderIndex() + 1);
+            }
+
+            for(Participant participant : participants){
+                if(participant instanceof Player player && player != currentParticipant){
+                    player.sendCommand(new DisplayParticipantHandSendCommand(currentParticipant.getName(), currentParticipant.getHand()));
+                }
+            }
+        }
     }
 
     @Override

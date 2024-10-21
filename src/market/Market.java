@@ -35,7 +35,9 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
 
             try {
                 logger.trace("Buying point card");
-                return piles.get(pileIndex).removeFirstPointCard();
+                var card =  piles.get(pileIndex).removeFirstPointCard();
+                logger.trace("Card bought: {}", card);
+                return card;
             } catch (PileOutOfCardsException e) {
                 logger.trace("Pile out of cards");
                 //remove from the bottom of the biggest of the other piles
@@ -66,7 +68,9 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
 
             try {
                 logger.trace("Getting point card");
-                return piles.get(pileIndex).getPointCard();
+                var card =  piles.get(pileIndex).getPointCard();
+                logger.trace("Card got: {}", card);
+                return card;
             } catch (PileOutOfCardsException e) {
                 logger.trace("Pile out of cards");
                 //remove from the bottom of the biggest of the other piles
@@ -98,7 +102,9 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
         ) {
             try {
                 logger.trace("Buying face card");
-                return piles.get(pileIndex).removeFaceCard(cardIndex);
+                var card =  piles.get(pileIndex).removeFaceCard(cardIndex);
+                logger.trace("Card bought: {}", card);
+                return card;
             } catch (PileOutOfCardsException e) {
                 logger.trace("Pile out of cards");
                 //remove from the bottom of the biggest of the other piles
@@ -156,10 +162,14 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
                     }
                 } else { // we can't remove active point cards from other piles
                     logger.trace("No other pile to take from");
-                    return piles.get(pileIndex).forceRemoveFaceCard(cardIndex);
+                    var retCard =  piles.get(pileIndex).forceRemoveFaceCard(cardIndex);
+                    logger.trace("Card got: {}", retCard);
+                    return retCard;
                 }
             }else{
-                return piles.get(pileIndex).getFaceCard(cardIndex);
+                var retCard =  piles.get(pileIndex).getFaceCard(cardIndex);
+                logger.trace("Card got: {}", retCard);
+                return retCard;
             }
         }
 
@@ -211,7 +221,7 @@ public abstract class Market<T extends Enum<T>> implements IMarket {
             try{
                 visibleCards.add(pile.getPointCard());
             } catch (PileOutOfCardsException _) {
-                //do nothing
+                visibleCards.add(null);
             }
         }
         return visibleCards;

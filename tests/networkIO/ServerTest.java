@@ -49,6 +49,53 @@ class ServerTest {
 
     }
 
+
+    @Test
+    void serverConnectsPlayersAndBotsCorrectlyWithMoreThenOnePlayer() throws Exception {
+        AtomicReference<ArrayList<Participant>> participants = new AtomicReference<>();
+        Thread x = new Thread(() -> {
+            try {
+                participants.setRelease(new Server(1234).startAcceptingConnections(2, 1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        x.start();
+
+        Thread.sleep(1000);
+
+        new Thread(() -> {
+            try {
+                new ConsoleClient("127.0.0.1", 1234);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        Thread.sleep(1000);
+
+        new Thread(() -> {
+            try {
+                new ConsoleClient("127.0.0.1", 1234);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        while (x.isAlive()) {
+            Thread.sleep(100);
+        }
+
+
+        assertAll(() -> {
+            assertEquals(3, participants.get().size());
+            assertInstanceOf(Player.class, participants.get().get(0));
+            assertInstanceOf(Player.class, participants.get().get(1));
+            assertInstanceOf(Bot.class, participants.get().get(2));
+        });
+
+    }
+
     @Test
     void serverRejectsWhenFewerThen2Players() {
         Server server = new Server(2345);

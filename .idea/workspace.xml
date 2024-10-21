@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="240054f0-999c-4c62-9f0f-6b3e95566863" name="Changes" comment="save">
+      <change beforePath="$PROJECT_DIR$/tests/game/score/VeggieScorerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/game/score/VeggieScorerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/player/BotTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/player/BotTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/player/ParticipantTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/player/ParticipantTest.java" afterDir="false" />
+    </list>
+    <list id="c98bec6e-4223-4812-a0bb-4746a8e4dc80" name="Card generic" comment="Card generic" />
+    <list id="9e6cc3aa-4677-47ec-815a-12016f00b8df" name="Improved server and client" comment="save" />
+    <list id="927bdd78-0785-48f1-9d98-c1df73447e98" name="Write test for VeggieScorer" comment="Write test for VeggieScorer">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/google_code_gson.xml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Hedlund01&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Hedlund01/D7032E-home_exam.git&quot;,
+    &quot;accountId&quot;: &quot;0511178f-970c-41ef-a363-77a790d12437&quot;
+  }
+}</component>
+  <component name="NamedScopeManager">
+    <scope name="src" pattern="src[D7032E-home_exam]:*..*" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2nkw7MXJhW0r2Xjk8B3mp9Vc5eD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Client.executor": "Run",
+    "Application.Server.executor": "Debug",
+    "Downloaded.Files.Path.Enabled": "true",
+    "JUnit.All in D7032E-home_exam.executor": "Run",
+    "JUnit.ClientTest.clientReceivesGameOverMessage.executor": "Debug",
+    "JUnit.EndStateTest.executeState_calculatesScoresAndLogsGameOver.executor": "Run",
+    "JUnit.EndStateTest.executeState_sendsCommandsToPlayers.executor": "Run",
+    "JUnit.EndStateTest.executeState_sendsTerminateCommandToAllPlayers (1).executor": "Run",
+    "JUnit.EndStateTest.executeState_sendsTerminateCommandToAllPlayers.executor": "Run",
+    "JUnit.VeggieScorerTest.calculateScoreExample.executor": "Run",
+    "JUnit.VeggieScorerTest.calculateScoreExampleFromRuleBook.executor": "Run",
+    "JUnit.card in D7032E-home_exam.executor": "Run",
+    "JUnit.game in D7032E-home_exam.executor": "Run",
+    "JUnit.game.score in D7032E-home_exam.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "save",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/hedlund01/IdeaProjects/D7032E-home_exam/lib/json.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.Server">
+    <configuration name="All in D7032E-home_exam" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="D7032E-home_exam" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ClientTest.clientReceivesGameOverMessage" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="D7032E-home_exam" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="networkIO.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="networkIO" />
+      <option name="MAIN_CLASS_NAME" value="networkIO.ClientTest" />
+      <option name="METHOD_NAME" value="clientReceivesGameOverMessage" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EndStateTest.executeState_sendsCommandsToPlayers" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="D7032E-home_exam" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="game.state.common.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="game.state.common" />
+      <option name="MAIN_CLASS_NAME" value="game.state.common.EndStateTest" />
+      <option name="METHOD_NAME" value="executeState_sendsCommandsToPlayers(player.Player,player.Player)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VeggieScorerTest.calculateScoreExample" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="D7032E-home_exam" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="game.score.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="game.score" />
+      <option name="MAIN_CLASS_NAME" value="game.score.VeggieScorerTest" />
+      <option name="METHOD_NAME" value="calculateScoreExample" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VeggieScorerTest.calculateScoreExampleFromRuleBook" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="D7032E-home_exam" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="game.score.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="game.score" />
+      <option name="MAIN_CLASS_NAME" value="game.score.VeggieScorerTest" />
+      <option name="METHOD_NAME" value="calculateScoreExampleFromRuleBook" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Client" />
+      <item itemvalue="JUnit.VeggieScorerTest.calculateScoreExample" />
+      <item itemvalue="JUnit.VeggieScorerTest.calculateScoreExampleFromRuleBook" />
+      <item itemvalue="JUnit.All in D7032E-home_exam" />
+      <item itemvalue="JUnit.ClientTest.clientReceivesGameOverMessage" />
+      <item itemvalue="JUnit.EndStateTest.executeState_sendsCommandsToPlayers" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.VeggieScorerTest.calculateScoreExample" />
+        <item itemvalue="JUnit.VeggieScorerTest.calculateScoreExampleFromRuleBook" />
+        <item itemvalue="JUnit.All in D7032E-home_exam" />
+        <item itemvalue="JUnit.ClientTest.clientReceivesGameOverMessage" />
+        <item itemvalue="JUnit.EndStateTest.executeState_sendsCommandsToPlayers" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <branch name="save" repository="C:\Users\hedlund01\IdeaProjects\D7032E-home_exam" />
+      <changelist id="240054f0-999c-4c62-9f0f-6b3e95566863" name="Changes" comment="" />
+      <created>1727686365561</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729330961779</updated>
+      <workItem from="1727686366641" duration="4502000" />
+      <workItem from="1727701953353" duration="5475000" />
+      <workItem from="1727707604949" duration="19606000" />
+      <workItem from="1728374893026" duration="6256000" />
+      <workItem from="1728460254245" duration="2252000" />
+      <workItem from="1728632681874" duration="26769000" />
+      <workItem from="1728718860991" duration="21387000" />
+      <workItem from="1728746132615" duration="1532000" />
+      <workItem from="1729000510605" duration="12107000" />
+      <workItem from="1729018798340" duration="19135000" />
+      <workItem from="1729175228597" duration="5542000" />
+      <workItem from="1729199225664" duration="446000" />
+      <workItem from="1729241390611" duration="43000" />
+      <workItem from="1729243846330" duration="1000" />
+      <workItem from="1729257233162" />
+      <workItem from="1729287951443" duration="102000" />
+      <workItem from="1729330962163" duration="6370000" />
+      <workItem from="1729347062282" duration="734000" />
+      <workItem from="1729347995813" duration="27000" />
+      <workItem from="1729348039482" duration="1405000" />
+      <workItem from="1729350894253" duration="2831000" />
+      <workItem from="1729418442294" duration="562000" />
+      <workItem from="1729430380902" duration="959000" />
+      <workItem from="1729433673640" duration="251000" />
+      <workItem from="1729433951610" duration="9639000" />
+      <workItem from="1729504152246" duration="1126000" />
+      <workItem from="1729519332489" duration="6657000" />
+      <workItem from="1729529251571" duration="755000" />
+      <workItem from="1729530025629" duration="87000" />
+      <workItem from="1729530124704" duration="85000" />
+      <workItem from="1729530214715" duration="72000" />
+      <workItem from="1729530289438" duration="148000" />
+      <workItem from="1729530453655" duration="7235000" />
+      <workItem from="1729601415874" duration="11530000" />
+    </task>
+    <task id="LOCAL-00001" summary="save">
+      <option name="closed" value="true" />
+      <created>1728415990957</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1728415990957</updated>
+    </task>
+    <task id="LOCAL-00002" summary="save">
+      <option name="closed" value="true" />
+      <created>1728673692457</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1728673692457</updated>
+    </task>
+    <task id="LOCAL-00003" summary="save">
+      <option name="closed" value="true" />
+      <created>1728679103384</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1728679103384</updated>
+    </task>
+    <task id="LOCAL-00004" summary="save">
+      <option name="closed" value="true" />
+      <created>1728680516241</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1728680516241</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Added some tests">
+      <option name="closed" value="true" />
+      <created>1728747685881</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1728747685881</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added some tests">
+      <option name="closed" value="true" />
+      <created>1729014990935</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1729014990935</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added some more test and fixed some bugs">
+      <option name="closed" value="true" />
+      <created>1729085417745</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1729085417745</updated>
+    </task>
+    <task id="LOCAL-00008" summary="save">
+      <option name="closed" value="true" />
+      <created>1729176223063</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1729176223063</updated>
+    </task>
+    <task id="LOCAL-00010" summary="save">
+      <option name="closed" value="true" />
+      <created>1729199297688</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1729199297688</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Card generic">
+      <branch name="save" repository="C:\Users\hedlund01\IdeaProjects\D7032E-home_exam" original="true" />
+      <branch name="Card-generic" repository="C:\Users\hedlund01\IdeaProjects\D7032E-home_exam" />
+      <changelist id="c98bec6e-4223-4812-a0bb-4746a8e4dc80" name="Card generic" comment="" />
+      <created>1729241405323</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1729243845435</updated>
+      <workItem from="1729241433870" duration="2292000" />
+    </task>
+    <task id="LOCAL-00012" summary="Card generic">
+      <option name="closed" value="true" />
+      <created>1729243533004</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1729243533004</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Improved server and client">
+      <branch name="save" repository="C:\Users\hedlund01\IdeaProjects\D7032E-home_exam" original="true" />
+      <branch name="Improved-server" repository="C:\Users\hedlund01\IdeaProjects\D7032E-home_exam" />
+      <changelist id="9e6cc3aa-4677-47ec-815a-12016f00b8df" name="Improved server and client" comment="" />
+      <created>1729263320025</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1729287950842</updated>
+      <workItem from="1729263323427" duration="712000" />
+      <workItem from="1729270485166" duration="1134000" />
+      <workItem from="1729272294441" duration="10086000" />
+      <workItem from="1729282807257" duration="5022000" />
+    </task>
+    <task id="LOCAL-00014" summary="Write test for VeggieScorer">
+      <branch name="origin/save" repository="C:\Users\hedlund01\IdeaProjects\D7032E-home_exam" original="true" />
+      <branch name="Write-test" repository="C:\Users\hedlund01\IdeaProjects\D7032E-home_exam" />
+      <changelist id="927bdd78-0785-48f1-9d98-c1df73447e98" name="Write test for VeggieScorer" comment="" />
+      <created>1729270355000</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1729330961777</updated>
+      <workItem from="1729270367686" duration="114000" />
+      <workItem from="1729271652541" duration="624000" />
+      <workItem from="1729288055709" duration="2402000" />
+      <workItem from="1729330918528" duration="44000" />
+    </task>
+    <task id="LOCAL-00015" summary="save">
+      <option name="closed" value="true" />
+      <created>1729270448100</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1729270448101</updated>
+    </task>
+    <task id="LOCAL-00016" summary="save">
+      <option name="closed" value="true" />
+      <created>1729287871002</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1729287871002</updated>
+    </task>
+    <task id="LOCAL-00017" summary="save">
+      <option name="closed" value="true" />
+      <created>1729287936571</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1729287936571</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Write test for VeggieScorer">
+      <option name="closed" value="true" />
+      <created>1729290458262</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1729290458262</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Write test for VeggieScorer">
+      <option name="closed" value="true" />
+      <created>1729290497981</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1729290497981</updated>
+    </task>
+    <task id="LOCAL-00020" summary="save">
+      <option name="closed" value="true" />
+      <created>1729505296754</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1729505296754</updated>
+    </task>
+    <task id="LOCAL-00021" summary="save">
+      <option name="closed" value="true" />
+      <created>1729535774152</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1729535774152</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="Write-test-for-veggieScorer" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Write-test-for-veggieScorer" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="save" />
+    <option name="LAST_COMMIT_MESSAGE" value="save" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/game/state/common/EndState.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/tests/networkIO/ClientTest.java</url>
+          <line>30</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/tests/networkIO/ClientTest.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/game/state/veggie/VeggieNextPlayerState.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="networkIO.commands.send.TakeTurnCommand" memberName="hand" />
+        <PinnedItemInfo parentTag="PointSaladThread" memberName="pointSalad" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+</project>

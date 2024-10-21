@@ -1,8 +1,8 @@
 package game.state.common;
 
 import game.score.IScorer;
-import networkIO.commands.send.display.DisplayParticipantHandAndScoreCommand;
-import networkIO.commands.send.system.TerminateCommand;
+import networkIO.commands.send.game.DisplayParticipantHandAndScoreSendCommand;
+import networkIO.commands.send.system.TerminateSendCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +11,7 @@ import player.Player;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class EndState extends GameState {
     private final Logger logger = LogManager.getLogger();
@@ -30,23 +31,43 @@ public class EndState extends GameState {
 
         Integer winnerID = Collections.max(scores.entrySet(), HashMap.Entry.comparingByValue()).getKey();
 
-        try (final CloseableThreadContext.Instance ctx = CloseableThreadContext.put("winnerID", winnerID.toString())
+        try (final CloseableThreadContext.Instance _ = CloseableThreadContext.put("winnerID", winnerID.toString())
                 .put("winnerScore", scores.get(winnerID).toString())) {
             logger.info("GAME OVER");
             for (Participant participant : stateContext.getParticipants()) {
                 logger.info("Player {}'s score is: {}", participant.getPlayerID(), scores.get(participant.getPlayerID()));
-                if (participant instanceof Player) {
-                    var p = (Player) participant;
-                    if (participant.getPlayerID() == winnerID) {
-                        logger.info("Player {} is the winner with a score of {}", winnerID, scores.get(winnerID));
-                        p.sendCommand(new DisplayParticipantHandAndScoreCommand(p.getName(), scores.get(winnerID), p.getHand(), true));
-                    } else {
-                        p.sendCommand(new DisplayParticipantHandAndScoreCommand(p.getName(), scores.get(participant.getPlayerID()), p.getHand(), false));
+                if (participant instanceof Player p) {
+                    for (var score : scores.entrySet()) {
+                        if (score.getKey() != winnerID) {
+                            var hand = participants.get(score.getKey()-1).getHand();
+                            p.sendCommand(
+                                    new DisplayParticipantHandAndScoreSendCommand(
+                                            score.getKey(),
+                                            participants.get(score.getKey()-1).getName(),
+                                            score.getValue(),
+                                            hand,
+                                            false
+                                    )
+                            );
+                        }
                     }
                 }
             }
-            stateContext.sendCommandToAllPlayers(new TerminateCommand());
-
+            for (Participant participant : stateContext.getParticipants()) {
+                if (participant instanceof Player p) {
+                    var hand = participants.get(winnerID-1).getHand();
+                    p.sendCommand(
+                            new DisplayParticipantHandAndScoreSendCommand(
+                                    winnerID,
+                                    participants.get(winnerID-1).getName(),
+                                    scores.get(winnerID),
+                                    hand,
+                                    true
+                            )
+                    );
+                }
+            }
+            stateContext.sendCommandToAllPlayers(new TerminateSendCommand());
         }
 
     }

@@ -6,8 +6,4 @@ public class Bot extends Participant {
         super(playerID);
     }
 
-    @Override
-    public boolean isBot() {
-        return true;
-    }
 }

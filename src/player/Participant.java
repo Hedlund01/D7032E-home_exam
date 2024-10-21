@@ -8,9 +8,18 @@ public abstract class Participant {
     private final int playerID;
     private String name;
     private final ArrayList<ICard> hand = new ArrayList<>();
+    private Integer turnOrderIndex = null;
 
     public Participant(int playerID) {
         this.playerID = playerID;
+    }
+
+    public Integer getTurnOrderIndex() {
+        return turnOrderIndex;
+    }
+
+    public void setTurnOrderIndex(int index) {
+        turnOrderIndex = index;
     }
 
     public int getPlayerID() {
@@ -38,6 +47,10 @@ public abstract class Participant {
 
 
     public int countCriteriaCardsInHand() {
+        return countCriteriaCards(hand);
+    }
+
+    public static int countCriteriaCards(ArrayList<ICard> hand) {
         int count = 0;
         for (ICard card : hand) {
             if (card.isCriteriaSideUp()) {
@@ -79,5 +92,4 @@ public abstract class Participant {
         return count;
     }
 
-    public abstract boolean isBot();
 }

@@ -17,6 +17,7 @@ public class VeggieMarket extends Market<Vegetable> {
 
 
     /**
+     * Initializes the market with the veggie cards from the file at the given path.
      * @param nrOfPlayers the number of players
      * @param path
      */

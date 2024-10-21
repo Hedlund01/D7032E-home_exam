@@ -6,7 +6,7 @@ import game.score.IScorer;
 import game.score.VeggieScorer;
 import game.state.common.GameState;
 import game.state.common.StateContext;
-import networkIO.commands.send.display.DisplayParticipantHandCommand;
+import networkIO.commands.send.game.DisplayParticipantHandSendCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,7 @@ public class VeggieBotTurnState extends GameState {
 
     @Override
     public void executeState() {
-        try (final CloseableThreadContext.Instance ctc = CloseableThreadContext.put("botID", Integer.toString(bot.getPlayerID()))
+        try (final CloseableThreadContext.Instance ctc = CloseableThreadContext.put("playerID", Integer.toString(bot.getPlayerID())).put("playerType", "Bot")
 
         ) {
             logger.info("Bot is taking its turn");
@@ -49,8 +49,6 @@ public class VeggieBotTurnState extends GameState {
                 default:
                     throw new FatalGameErrorException("Bot Choice not implemented");
             }
-
-            stateContext.sendCommandToAllPlayers(new DisplayParticipantHandCommand("Player " + bot.getPlayerID(), bot.getHand()));
         }
     }
 
@@ -61,7 +59,9 @@ public class VeggieBotTurnState extends GameState {
             for (int j = 0; j <= 1; j++) {
 
                 if (market.getFaceCard(i, j) != null && cardsPicked < 2) {
-                    bot.addCardToHand(market.buyFaceCard(i, j));
+                    var card = market.buyFaceCard(i, j);
+                    bot.addCardToHand(card);
+                    logger.debug("Bot bought a veggie card: {}", card);
                     cardsPicked++;
                 }
             }
@@ -70,7 +70,7 @@ public class VeggieBotTurnState extends GameState {
             logger.trace("Bot successfully bought {} veggie cards", cardsPicked);
             return true;
         }else{
-            logger.trace("Bot failed to buy veggie cards");
+            logger.debug("Bot failed to buy veggie cards");
             return false;
         }
     }
@@ -99,10 +99,10 @@ public class VeggieBotTurnState extends GameState {
         var card = market.getPointCard(highestPointCardIndex);
         if (card != null) {
             bot.addCardToHand(card);
-            logger.trace("Bot successfully bought a point card");
+            logger.debug("Bot successfully bought a point card, {}", card);
             return true;
         } else {
-            logger.trace("Bot failed to buy a point card");
+            logger.debug("Bot failed to buy a point card");
             return false;
         }
     }

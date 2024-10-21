@@ -17,11 +17,8 @@ class ParticipantTest {
 
     @BeforeEach
     void setUp() {
-        participant = new Participant(1) {
-            @Override
-            public boolean isBot() {
-                return false;
-            }
+        participant = new Participant(1){
+
         };
     }
 

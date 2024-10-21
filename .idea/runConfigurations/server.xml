@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Server" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="Main" />
+    <module name="D7032E-home_exam" />
+    <option name="PROGRAM_PARAMETERS" value="4040 2 0" />
+    <option name="VM_PARAMETERS" value="-javaagent:lib/byte-buddy-agent-1.15.4.jar" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,7 +1,8 @@
 package player;
 
 
-import networkIO.commands.ICommand;
+import networkIO.commands.ISendCommand;
+import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,35 +34,27 @@ public class Player extends Participant {
     }
 
 
-    public void sendCommand(ICommand command) {
-        try {
-            outToClient.writeObject(command);
-            outToClient.reset();
-        } catch (Exception e) {
-            logger.error("Error sending command to player {}. Error: {}", getPlayerID(), e.getMessage());
-        }
+    public void sendCommand(ISendCommand command) {
+        command.execute(outToClient);
     }
 
-    public ICommand readCommand() {
-        try {
-            var input = inFromClient.readObject();
-            if (input instanceof ICommand) {
-                return (ICommand) input;
-            } else {
-                logger.error("Error reading command from player {}. Error: {}", getPlayerID(), "Command is not an instance of ICommand");
-                return null;
+    public ISendCommand readCommand() {
+        try(var _ = CloseableThreadContext.put("playerID", String.valueOf(getPlayerID()))) {
+
+            try {
+                var input = inFromClient.readObject();
+                if (input instanceof ISendCommand cmd) {
+                    return cmd;
+                } else {
+                    logger.error("Error reading command from player. Error: {}", "Command is not an instance of ICommand");
+                }
+            } catch (SocketTimeoutException e) {
+                logger.warn("Player did not respond in time");
+            } catch (Exception e) {
+                logger.error("Error reading command from player. Error: {}", e.getMessage());
             }
-        } catch (SocketTimeoutException e) {
-            logger.warn("Player {} did not respond in time", getPlayerID());
-            return null;
-        } catch (Exception e) {
-            logger.error("Error reading command from player {}. Error: {}", getPlayerID(), e.getMessage());
             return null;
         }
     }
 
-    @Override
-    public boolean isBot() {
-        return false;
-    }
 }

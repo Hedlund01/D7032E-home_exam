@@ -4,11 +4,11 @@ import exceptions.InvalidArgumentException;
 import exceptions.NotEnoughCardsInMarketException;
 import game.state.common.StateContext;
 import game.state.common.GameState;
-import networkIO.commands.recive.SendClientInputToServerCommand;
-import networkIO.commands.send.display.DisplayErrorMessageCommand;
-import networkIO.commands.send.display.DisplayInvalidInputCommand;
-import networkIO.commands.send.game.AskFlipFaceCardCommand;
-import networkIO.commands.send.game.TakeTurnCommand;
+import networkIO.commands.recive.ServerReceiveClientInputCommand;
+import networkIO.commands.send.system.DisplayErrorMessageSendCommand;
+import networkIO.commands.send.system.DisplayInvalidInputSendCommand;
+import networkIO.commands.send.game.AskFlipFaceCardSendCommand;
+import networkIO.commands.send.game.TakeTurnSendCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,14 +42,15 @@ public class VeggiePlayerTurnState extends GameState {
                 var pointCards = market.getAllVisiblePointCards();
                 var faceCards = market.getAllVisibleFaceCards();
                 var hand = player.getHand();
-                var cmdTest  = new TakeTurnCommand(pointCards, faceCards, hand, takenVeggies);
+                var cmdTest  = new TakeTurnSendCommand(pointCards, faceCards, hand, takenVeggies);
 
                 player.sendCommand(cmdTest);
 
                 String playerInput;
                 var command = player.readCommand();
-                if(command instanceof SendClientInputToServerCommand cmd){
-                    playerInput = cmd.message();
+                if(command instanceof ServerReceiveClientInputCommand cmd){
+                    playerInput = cmd.getMessage();
+                    playerInput = playerInput.toUpperCase();
                     logger.trace("Player input: {}", playerInput);
                 }else{
                     logger.error("Invalid command type, expected SendClientInputToServerCommand but got: {}", command);
@@ -62,27 +63,27 @@ public class VeggiePlayerTurnState extends GameState {
                         buyPointCard(playerInput);
                         break;
                     } catch (InvalidArgumentException e) {
-                        player.sendCommand(new DisplayErrorMessageCommand(e.getMessage()));
+                        player.sendCommand(new DisplayErrorMessageSendCommand(e.getMessage()));
                     }
                 } else if (playerInput.matches("[A-F]{2}") || playerInput.matches("[A-F]")) {
                     try {
                         takenVeggies += buyVeggieCards(playerInput);
                     } catch (InvalidArgumentException | NotEnoughCardsInMarketException e) {
-                        player.sendCommand(new DisplayErrorMessageCommand(e.getMessage()));
+                        player.sendCommand(new DisplayErrorMessageSendCommand(e.getMessage()));
                     }
                 } else {
-                    player.sendCommand(new DisplayInvalidInputCommand());
+                    player.sendCommand(new DisplayInvalidInputSendCommand());
                 }
             }
 
             logger.trace("Checking if player has criteria cards in hand");
             if (player.countCriteriaCardsInHand() > 0) {
                 //Give the player an option to turn a criteria card into a veggie card
-                player.sendCommand(new AskFlipFaceCardCommand(player.getHand()));
+                player.sendCommand(new AskFlipFaceCardSendCommand(player.getHand()));
                 var inputCommand = player.readCommand();
                 String choice = "";
-                if(inputCommand instanceof SendClientInputToServerCommand cmd) {
-                    choice = cmd.message();
+                if(inputCommand instanceof ServerReceiveClientInputCommand cmd) {
+                    choice = cmd.getMessage();
                 }else {
                     logger.error("Invalid command type, expected SendClientInputToServerCommand but got: {}", inputCommand);
                 }
@@ -92,7 +93,6 @@ public class VeggiePlayerTurnState extends GameState {
                 }
             }
 
-            printEndInformation();
             logger.trace("Player turn completed");
         }
     }
@@ -147,17 +147,4 @@ public class VeggiePlayerTurnState extends GameState {
     }
 
 
-    private void printStartInformation() {
-//        player.sendMessage("\n\n****************************************************************\nIt's your turn! Your hand is:\n");
-//        player.sendMessage(player.getHandString());
-//        player.sendMessage("\nThe piles are: ");
-
-
-    }
-
-
-    private void printEndInformation() {
-//        player.sendMessage("\nYour turn is completed\n****************************************************************\n\n");
-//        stateContext.sendToAllPlayers("player " + player.getPlayerID() + "'s hand is now: \n" + player.getHandString() + "\n");
-    }
 }

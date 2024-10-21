@@ -14,8 +14,5 @@ class BotTest {
         bot = new Bot(1);
     }
 
-    @Test
-    void isBot() {
-        assertTrue(bot.isBot());
-    }
+
 }

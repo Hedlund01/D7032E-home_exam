@@ -1,31 +1,37 @@
 package networkIO;
 
 import card.ICard;
-import networkIO.commands.recive.SendClientInputToServerCommand;
-import networkIO.commands.send.display.*;
-import networkIO.commands.send.game.AskFlipFaceCardCommand;
-import networkIO.commands.send.game.TakeTurnCommand;
-import networkIO.commands.send.system.AskClientToSendInputCommand;
-import networkIO.commands.send.system.TerminateCommand;
+import networkIO.commands.recive.ServerReceiveClientInputCommand;
+import networkIO.commands.send.game.AskFlipFaceCardSendCommand;
+import networkIO.commands.send.game.DisplayParticipantHandAndScoreSendCommand;
+import networkIO.commands.send.game.DisplayParticipantHandSendCommand;
+import networkIO.commands.send.game.TakeTurnSendCommand;
+import networkIO.commands.send.system.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.fusesource.jansi.Ansi.ansi;
-
+/**
+ * The ConsoleClient class extends the Client class and handles the communication
+ * with the server, processing various commands received from the server.
+ */
 public class ConsoleClient extends Client {
 
     private int playerID;
 
+    /**
+     * Constructs a new ConsoleClient with the specified IP address and port.
+     *
+     * @param ipAddress the IP address of the server
+     * @param port the port number of the server
+     * @throws Exception if an error occurs during the connection
+     */
     public ConsoleClient(String ipAddress, int port) throws Exception {
         super(ipAddress, port);
     }
 
 
-    /**
-     *
-     */
     @Override
     protected void start() {
         while (true) {
@@ -33,80 +39,67 @@ public class ConsoleClient extends Client {
                 var command = inFromServer.readObject();
 
                 switch (command) {
-                    case DisplayConnectionMessageCommand cmd -> {
-                        playerID = cmd.playerID();
-                        consoleOutput("You are connected to the server as " + cmd.playerName());
+                    case DisplayConnectionMessageSendCommand cmd -> {
+                        playerID = cmd.getPlayerID();
+                        consoleOutput("You are connected to the server as " + cmd.getPlayerName());
                     }
-                    case TakeTurnCommand cmd -> {
-
-
-                        if (cmd.takenCards() > 0) {
+                    case TakeTurnSendCommand cmd -> {
+                        if (cmd.getTakenCards() > 0) {
                             consoleBreakLine("It's your turn again!");
-                            consoleOutput("You have taken " + cmd.takenCards() + " vegetable cards.");
+                            consoleOutput("You have taken " + cmd.getTakenCards() + " vegetable cards.");
                             consoleOutput("Take 1 more vegetable cards.");
                         } else {
                             consoleBreakLine("It's your turn!");
                         }
-                        consoleOutput(getHandDisplayString(cmd.hand(), null));
-                        consoleOutput(getMarketDisplayString(cmd.pointCards(), cmd.faceCards()));
+                        consoleOutput(getHandDisplayString(cmd.getHand(), null));
+                        consoleOutput(getMarketDisplayString(cmd.getPointCards(), cmd.getFaceCards()));
                         System.out.print("Card/s to take: ");
                         var input = System.console().readLine();
-                        sendCommand(new SendClientInputToServerCommand(input));
-
+                        sendCommand(new ServerReceiveClientInputCommand(input));
                     }
-
-                    case DisplayMessageCommand cmd -> {
-                        consoleOutput(cmd.message());
+                    case DisplayMessageSendCommand cmd -> {
+                        consoleOutput(cmd.getMessage());
                     }
-
-                    case AskClientToSendInputCommand cmd -> {
-                        consoleOutput(cmd.message());
-                        System.out.print(cmd.inputLineMessage());
+                    case AskClientToInputSendCommand cmd -> {
+                        consoleOutput(cmd.getMessage());
+                        System.out.print("Input: ");
                         var input = System.console().readLine();
-                        sendCommand(new SendClientInputToServerCommand(input));
+                        sendCommand(new ServerReceiveClientInputCommand(input));
                     }
-
-                    case DisplayParticipantHandCommand cmd -> {
-                        consoleBreakLine("Player " + cmd.playerName() + "'s hand");
-                        consoleOutput(getHandDisplayString(cmd.hand(), cmd.playerName()));
+                    case DisplayParticipantHandSendCommand cmd -> {
+                        consoleBreakLine("Player " + cmd.getName() + "'s hand");
+                        consoleOutput(getHandDisplayString(cmd.getHand(), cmd.getName()));
                     }
-
-                    case DisplayErrorMessageCommand cmd -> {
+                    case DisplayErrorMessageSendCommand cmd -> {
                         consoleBreakLine("Error");
-                        consoleOutput(cmd.message());
-
+                        consoleOutput(cmd.getMessage());
                     }
-
-                    case DisplayParticipantHandAndScoreCommand cmd -> {
-
-                        if (cmd.isWinner()) {
+                    case DisplayParticipantHandAndScoreSendCommand cmd -> {
+                        if (cmd.getPlayerID() == playerID && cmd.isWinner()) {
                             consoleBreakLine("You are the winner!");
+                        } else if (cmd.isWinner()) {
+                            consoleBreakLine("Player " + cmd.getName() + " is the winner!");
                         } else {
-                            consoleBreakLine("Player " + cmd.name() + "'s hand and score");
+                            consoleBreakLine("Player " + cmd.getName() + "'s hand and score");
                         }
-                        consoleOutput(getHandDisplayString(cmd.hand(), cmd.name()));
-                        consoleOutput("Score: " + cmd.score());
+                        consoleOutput(getHandDisplayString(cmd.getHand(), cmd.getName()));
+                        consoleOutput("Score: " + cmd.getScore());
                     }
-
-                    case AskFlipFaceCardCommand cmd -> {
+                    case AskFlipFaceCardSendCommand cmd -> {
                         consoleOutput("You have a criteria card in your hand. Would you like to flip it to a vegetable card?");
-                        consoleOutput(getHandDisplayString(cmd.hand(), null));
+                        consoleOutput(getHandDisplayString(cmd.getHand(), null));
                         System.out.print("Flip a card? (syntax [0/n]): ");
-
                         var input = System.console().readLine();
-                        sendCommand(new SendClientInputToServerCommand(input));
+                        sendCommand(new ServerReceiveClientInputCommand(input));
                     }
-
-                    case DisplayInvalidInputCommand _ -> {
+                    case DisplayInvalidInputSendCommand _ -> {
                         consoleOutput("Invalid input. Please try again.");
                     }
-
-                    case TerminateCommand _ -> {
+                    case TerminateSendCommand _ -> {
                         consoleOutput("Game has ended.");
                         close();
                         System.exit(0);
                     }
-
                     default -> {
                         System.out.println("Unknown command received from server, command: " + command.getClass().getName());
                     }
@@ -120,10 +113,20 @@ public class ConsoleClient extends Client {
         }
     }
 
+    /**
+     * Outputs a message to the console.
+     *
+     * @param message the message to output
+     */
     private void consoleOutput(String message) {
         System.out.println("\n" + message);
     }
 
+    /**
+     * Outputs a message to the console with a break line.
+     *
+     * @param message the message to output
+     */
     private void consoleBreakLine(String message) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < (80 - message.length()) / 2; i++) {
@@ -136,13 +139,18 @@ public class ConsoleClient extends Client {
         System.out.println(sb);
     }
 
+    /**
+     * Generates a string representation of the market display.
+     *
+     * @param pointCards the list of point cards
+     * @param faceCards the list of face cards
+     * @return the string representation of the market display
+     */
     private String getMarketDisplayString(ArrayList<ICard> pointCards, ArrayList<ICard> faceCards) {
-
         StringBuilder pileString = new StringBuilder();
         pileString.append("Market:\n");
         pileString.append("Point Cards:\t");
         for (int i = 0; i < pointCards.size(); i++) {
-
             if (pointCards.get(i) != null) {
                 pileString.append("[").append(i).append("]").append(String.format("%-43s", pointCards.get(i))).append("\t");
             } else {
@@ -159,11 +167,16 @@ public class ConsoleClient extends Client {
             }
             veggieCardIndex++;
         }
-
         return pileString.toString();
     }
 
-
+    /**
+     * Generates a string representation of the hand display.
+     *
+     * @param hand the list of cards in hand
+     * @param playerName the name of the player
+     * @return the string representation of the hand display
+     */
     private String getHandDisplayString(ArrayList<ICard> hand, String playerName) {
         StringBuilder handString = new StringBuilder();
         if (playerName != null) {
@@ -187,8 +200,6 @@ public class ConsoleClient extends Client {
         for (Map.Entry<String, Integer> entry : faceCount.entrySet()) {
             handString.append(String.format("%s: %d\t", entry.getKey(), entry.getValue()));
         }
-
         return handString.toString();
     }
-
 }
