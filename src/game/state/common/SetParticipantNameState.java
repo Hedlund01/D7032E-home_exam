@@ -1,9 +1,9 @@
 package game.state.common;
 
 import game.state.veggie.VeggieInitState;
-import networkIO.commands.recive.SendClientInputToServerCommand;
-import networkIO.commands.send.system.AskClientToSendInputCommand;
-import networkIO.commands.send.display.DisplayMessageCommand;
+import networkIO.commands.recive.ServerReceiveClientInputCommand;
+import networkIO.commands.send.system.AskClientToInputSendCommand;
+import networkIO.commands.send.system.DisplayMessageSendCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,14 +29,14 @@ public class SetParticipantNameState implements IGameState {
                 return;
             }
             player.setReadTimeout(10 * 1000);
-            player.sendCommand(new AskClientToSendInputCommand("Please enter your name (respond within 10 seconds)", "Name: "));
+            player.sendCommand(new AskClientToInputSendCommand("Please enter your name (respond within 10 seconds)", "Name: "));
 
             var inputCmd = player.readCommand();
-            if (inputCmd instanceof SendClientInputToServerCommand cmd) {
-                player.setName(cmd.message());
+            if (inputCmd instanceof ServerReceiveClientInputCommand cmd) {
+                player.setName(cmd.getMessage());
 
             } else {
-                player.sendCommand(new DisplayMessageCommand("You did not respond in time. Your name is set to 'Player " + player.getPlayerID() + "'"));
+                player.sendCommand(new DisplayMessageSendCommand("You did not respond in time. Your name is set to 'Player " + player.getPlayerID() + "'"));
             }
             player.setReadTimeout(0);
 

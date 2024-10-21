@@ -1,6 +1,6 @@
 package networkIO;
 
-import networkIO.commands.send.system.TerminateCommand;
+import networkIO.commands.send.system.TerminateSendCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -12,7 +12,6 @@ import java.net.Socket;
 
 class ClientTest {
 
-
     @Test
     @Timeout(10)
     void clientReceivesGameOverMessage() throws Exception {
@@ -21,7 +20,7 @@ class ClientTest {
                 ServerSocket mockSocket = new ServerSocket(8767);
                 Socket clientSocket = mockSocket.accept();
                 ObjectOutputStream outToClient = new ObjectOutputStream(clientSocket.getOutputStream());
-                outToClient.writeObject(new TerminateCommand());
+                outToClient.writeObject(new TerminateSendCommand());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

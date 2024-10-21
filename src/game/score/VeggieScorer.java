@@ -147,11 +147,17 @@ private int handleAdditionCriteria(String criteria, ArrayList<ICard> hand) {
         for (Participant participant : participants) {
             if (participant.getPlayerID() != currentParticipant.getPlayerID()) {
                 int participantVegCount = participant.countFaceCardsInHand(Vegetable.valueOf(veg));
-                //[TODO] should check if the participant played after the current participant, if so current participant should not get the points.
-                if (criteria.contains("MOST") && participantVegCount > currentParticipantsVegCount) {
-                    return 0;
-                } else if (criteria.contains("FEWEST") && participantVegCount < currentParticipantsVegCount) {
-                    return 0;
+
+                if (criteria.contains("MOST") && participantVegCount >= currentParticipantsVegCount) {
+                    //checks if the participant played after the current participant, if so current participant should not get the points.
+                    if(participantVegCount == currentParticipantsVegCount && participant.getTurnOrderIndex() > currentParticipant.getTurnOrderIndex()) {
+                        return 0;
+                    }
+                } else if (criteria.contains("FEWEST") && participantVegCount <= currentParticipantsVegCount) {
+                    //checks if the participant played after the current participant, if so current participant should not get the points.
+                    if(participantVegCount == currentParticipantsVegCount && participant.getTurnOrderIndex() > currentParticipant.getTurnOrderIndex()) {
+                        return 0;
+                    }
                 }
             }
         }
@@ -227,8 +233,8 @@ private int handleAdditionCriteria(String criteria, ArrayList<ICard> hand) {
                 int participantFaceCards = participant.countFaceCardsInHand();
                 if (criteria.contains("MOST")) {
                     if (participantFaceCards >= currentParticipantFaceCards) {
-                        //[TODO] should check if the participant played after the current participant, if so current participant should not get the points.
-                        if(participantFaceCards == currentParticipantFaceCards){
+                        //checks if the participant played after the current participant, if so current participant should not get the points.
+                        if(participantFaceCards == currentParticipantFaceCards && participant.getTurnOrderIndex() > currentParticipant.getTurnOrderIndex()) {
                             return 0;
                         }else{
                             break;
@@ -238,8 +244,8 @@ private int handleAdditionCriteria(String criteria, ArrayList<ICard> hand) {
                     }
                 } else if (criteria.contains("LEAST")) {
                     if (participantFaceCards <= currentParticipantFaceCards) {
-                        //[TODO] should check if the participant played after the current participant, if so current participant should not get the points.
-                        if(participantFaceCards == currentParticipantFaceCards) {
+                        //checks if the participant played after the current participant, if so current participant should not get the points.
+                        if(participantFaceCards == currentParticipantFaceCards && participant.getTurnOrderIndex() > currentParticipant.getTurnOrderIndex()) {
                             return 0;
                         }else{
                             break;

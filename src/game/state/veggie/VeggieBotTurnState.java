@@ -6,7 +6,7 @@ import game.score.IScorer;
 import game.score.VeggieScorer;
 import game.state.common.GameState;
 import game.state.common.StateContext;
-import networkIO.commands.send.display.DisplayParticipantHandCommand;
+import networkIO.commands.send.game.DisplayParticipantHandSendCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +50,7 @@ public class VeggieBotTurnState extends GameState {
                     throw new FatalGameErrorException("Bot Choice not implemented");
             }
 
-            stateContext.sendCommandToAllPlayers(new DisplayParticipantHandCommand("Player " + bot.getPlayerID(), bot.getHand()));
+            stateContext.sendCommandToAllPlayers(new DisplayParticipantHandSendCommand("Player " + bot.getPlayerID(), bot.getHand()));
         }
     }
 

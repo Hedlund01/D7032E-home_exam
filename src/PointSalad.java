@@ -1,13 +1,9 @@
-import card.Card;
-import card.ICard;
-import card.Vegetable;
+
 import game.state.common.SetParticipantNameState;
 import game.state.common.StateContext;
-import game.state.veggie.VeggieInitState;
 import market.VeggieMarket;
 import networkIO.Server;
 import player.Participant;
-import player.Player;
 
 import java.util.ArrayList;
 
@@ -25,6 +21,8 @@ public class PointSalad {
             StateContext game = new StateContext(players, new VeggieMarket());
             game.setState(new SetParticipantNameState(game, players.getFirst()));
             game.execute();
+
+
 
         } catch (IndexOutOfBoundsException e){
             System.out.println("Invalid number of arguments; please provide a port, number of players, and number of bots");

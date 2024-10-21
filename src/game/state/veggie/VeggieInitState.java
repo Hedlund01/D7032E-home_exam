@@ -21,7 +21,6 @@ public class VeggieInitState implements IGameState {
 
     @Override
     public GameState getNextState() {
-        Participant initParticipant = stateContext.getParticipants().get((int) (Math.random() * stateContext.getParticipants().size()));
-        return new VeggieNextPlayerState(stateContext, initParticipant);
+        return new VeggieNextPlayerState(stateContext, null);
     }
 }

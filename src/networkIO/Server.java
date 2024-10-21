@@ -2,7 +2,7 @@ package networkIO;
 
 import exceptions.TooFewPlayersExcpetion;
 import exceptions.TooManyPlayerException;
-import networkIO.commands.send.display.DisplayConnectionMessageCommand;
+import networkIO.commands.send.system.DisplayConnectionMessageSendCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,10 +16,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * Server class to handle player and bot connections.
+ * This class manages the server socket and handles the connection logic for players and bots.
+ */
 public class Server {
     private ServerSocket serverSocket;
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Constructs a Server object with the specified port.
+     *
+     * @param port the port number to bind the server socket to
+     */
     public Server(int port) {
         try {
             serverSocket = new ServerSocket(port);
@@ -28,6 +37,18 @@ public class Server {
         }
     }
 
+    /**
+     * Starts accepting connections for the specified number of players and bots.
+     * This method waits for the specified number of players and bots to connect to the server.
+     * It then creates a socket connection, input/output streams, and a player or bot object for each participant.
+     *
+     *
+     * @param players the number of players to accept
+     * @param bots the number of bots to connect
+     * @return a list of participants (players and bots)
+     * @throws TooFewPlayersExcpetion if the total number of players and bots is less than 2
+     * @throws TooManyPlayerException if the total number of players and bots is more than 6
+     */
     public ArrayList<Participant> startAcceptingConnections(int players, int bots) {
         try (final CloseableThreadContext.Instance ctc = CloseableThreadContext
                 .put("server", "acceptingConnections")
@@ -63,6 +84,14 @@ public class Server {
         }
     }
 
+    /**
+     * Handles the connection for a player or bot by creating a socket connection, input/output streams and
+     * a player or bot object.
+     *
+     * @param playerId the ID of the player or bot
+     * @param isBot whether the connection is for a bot
+     * @return the connected participant (player or bot)
+     */
     private Participant handleConnection(int playerId, boolean isBot) {
         try (final CloseableThreadContext.Instance ctc = CloseableThreadContext
                 .put("server", "handleConnection")
@@ -76,7 +105,7 @@ public class Server {
                 if (!isBot) {
                     logger.info("Player connected");
                     Player player = new Player(playerId, connectionSocket, inFromClient, outToClient);
-                    player.sendCommand(new DisplayConnectionMessageCommand(player.getName(), player.getPlayerID()));
+                    player.sendCommand(new DisplayConnectionMessageSendCommand(player.getName(), player.getPlayerID()));
                     return player;
 
                 } else {

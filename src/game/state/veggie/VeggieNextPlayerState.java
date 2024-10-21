@@ -23,7 +23,16 @@ public class VeggieNextPlayerState extends GameState {
 
     @Override
     public void executeState() {
-        nextParticipant = participants.get((participants.indexOf(currentParticipant) + 1) % participants.size());
+        if(currentParticipant == null) {
+            nextParticipant = participants.get((int) (Math.random() * stateContext.getParticipants().size()));
+            nextParticipant.setTurnOrderIndex(0);
+        }else {
+            nextParticipant = participants.get((participants.indexOf(currentParticipant) + 1) % participants.size());
+
+            if(nextParticipant.getTurnOrderIndex() == null){
+                nextParticipant.setTurnOrderIndex(currentParticipant.getTurnOrderIndex() + 1);
+            }
+        }
     }
 
     @Override

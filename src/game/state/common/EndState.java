@@ -1,8 +1,8 @@
 package game.state.common;
 
 import game.score.IScorer;
-import networkIO.commands.send.display.DisplayParticipantHandAndScoreCommand;
-import networkIO.commands.send.system.TerminateCommand;
+import networkIO.commands.send.game.DisplayParticipantHandAndScoreSendCommand;
+import networkIO.commands.send.system.TerminateSendCommand;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,22 +30,21 @@ public class EndState extends GameState {
 
         Integer winnerID = Collections.max(scores.entrySet(), HashMap.Entry.comparingByValue()).getKey();
 
-        try (final CloseableThreadContext.Instance ctx = CloseableThreadContext.put("winnerID", winnerID.toString())
+        try (final CloseableThreadContext.Instance _ = CloseableThreadContext.put("winnerID", winnerID.toString())
                 .put("winnerScore", scores.get(winnerID).toString())) {
             logger.info("GAME OVER");
             for (Participant participant : stateContext.getParticipants()) {
                 logger.info("Player {}'s score is: {}", participant.getPlayerID(), scores.get(participant.getPlayerID()));
-                if (participant instanceof Player) {
-                    var p = (Player) participant;
+                if (participant instanceof Player p) {
                     if (participant.getPlayerID() == winnerID) {
                         logger.info("Player {} is the winner with a score of {}", winnerID, scores.get(winnerID));
-                        p.sendCommand(new DisplayParticipantHandAndScoreCommand(p.getName(), scores.get(winnerID), p.getHand(), true));
+                        p.sendCommand(new DisplayParticipantHandAndScoreSendCommand(p.getName(), scores.get(winnerID), p.getHand(), true));
                     } else {
-                        p.sendCommand(new DisplayParticipantHandAndScoreCommand(p.getName(), scores.get(participant.getPlayerID()), p.getHand(), false));
+                        p.sendCommand(new DisplayParticipantHandAndScoreSendCommand(p.getName(), scores.get(participant.getPlayerID()), p.getHand(), false));
                     }
                 }
             }
-            stateContext.sendCommandToAllPlayers(new TerminateCommand());
+            stateContext.sendCommandToAllPlayers(new TerminateSendCommand());
 
         }
 

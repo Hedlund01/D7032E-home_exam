@@ -1,7 +1,7 @@
 package game.state.common;
 
 import market.IMarket;
-import networkIO.commands.ICommand;
+import networkIO.commands.ISendCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import player.Participant;
@@ -20,6 +20,7 @@ public class StateContext {
         this.participants = participants;
         this.market = market;
     }
+
 
     public void setState(IGameState state) {
         currentState = state;
@@ -42,11 +43,12 @@ public class StateContext {
     }
 
 
-    public void sendCommandToAllPlayers(ICommand command) {
+    public void sendCommandToAllPlayers(ISendCommand command) {
         for (Participant player : participants) {
             if (player instanceof Player) {
                 ((Player) player).sendCommand(command);
             }
         }
     }
+
 }
