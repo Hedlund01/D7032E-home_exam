@@ -27,7 +27,7 @@ class ClientTest {
         }).start();
 
         Client client = new ConsoleClient("127.0.0.1", 8767);
-
+        client.start();
         assertTrue(true);
     }
 
