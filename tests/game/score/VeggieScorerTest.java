@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 class VeggieScorerTest {
 
     @Test
-    void calculateScoreExampleFromRuleBook() {
+    void calculateScoreExample() {
         VeggieScorer scorer = new VeggieScorer();
 
         var cards1 = new ArrayList<ICard>();
@@ -62,6 +62,9 @@ class VeggieScorerTest {
         card = new Card<>(Vegetable.CARROT, "5 / VEGETABLE TYPE >=3");
         cards1.add(card);
 
+        card = new Card<>(Vegetable.CARROT, "ONION: EVEN=7, ODD=3");
+        cards1.add(card);
+
         var card2 = new Card<>(Vegetable.CARROT, "TEST");
         card2.setCriteriaSideUp(false);
 
@@ -82,7 +85,7 @@ class VeggieScorerTest {
         participants.add(bot2);
 
 
-        assertEquals(60, scorer.calculateScore(participants, bot1, bot1.getHand()));
+        assertEquals(63, scorer.calculateScore(participants, bot1, bot1.getHand()));
 
 
     }
