@@ -1,0 +1,93 @@
+{
+  "cards": [
+    {
+      "id": 1,
+      "criteria": {
+        "TEST1": "MOST TEST2 = 10",
+        "TEST2": "MOST TEST1 = 10",
+        "TEST3": "MOST TEST4 = 10",
+        "TEST4": "MOST TEST3 = 10",
+        "TEST5": "MOST TEST6 = 10",
+        "TEST6": "MOST TEST5 = 10"
+      }
+    },
+
+    {
+      "id": 3,
+      "criteria": {
+        "TEST1": "TEST2: EVEN=7, ODD=3",
+        "TEST2": "TEST1: EVEN=7, ODD=3",
+        "TEST3": "TEST4: EVEN=7, ODD=3",
+        "TEST4": "TEST3: EVEN=7, ODD=3",
+        "TEST5": "TEST6: EVEN=7, ODD=3",
+        "TEST6": "TEST5: EVEN=7, ODD=3"
+      }
+    },
+    {
+      "id": 4,
+      "criteria": {
+        "TEST1": "2 / TEST2",
+        "TEST2": "2 / TEST1",
+        "TEST3": "2 / TEST4",
+        "TEST4": "2 / TEST3",
+        "TEST5": "2 / TEST6",
+        "TEST6": "2 / TEST5"
+      }
+    },
+    {
+      "id": 5,
+      "criteria": {
+        "TEST1": "TEST2 + TEST2 = 5",
+        "TEST2": "TEST1 + TEST1 = 5",
+        "TEST3": "TEST4 + TEST4 = 5",
+        "TEST4": "TEST3 + TEST3 = 5",
+        "TEST5": "TEST6 + TEST6 = 5",
+        "TEST6": "TEST5 + TEST5 = 5"
+      }
+    },
+    {
+      "id": 8,
+      "criteria": {
+        "TEST1": "1 / TEST2,  1 / TEST5",
+        "TEST2": "1 / TEST1,  1 / TEST6",
+        "TEST3": "1 / TEST4,  1 / TEST2",
+        "TEST4": "1 / TEST3,  1 / TEST1",
+        "TEST5": "1 / TEST6,  1 / TEST3",
+        "TEST6": "1 / TEST5,  1 / TEST4"
+      }
+    },
+    {
+      "id": 11,
+      "criteria": {
+        "TEST1": "TEST2 + TEST2 + TEST2 = 8",
+        "TEST2": "TEST1 + TEST1 + TEST1 = 8",
+        "TEST3": "TEST4 + TEST4 + TEST4 = 8",
+        "TEST4": "TEST3 + TEST3 + TEST3 = 8",
+        "TEST5": "TEST6 + TEST6 + TEST6 = 8",
+        "TEST6": "TEST5 + TEST5 + TEST5 = 8"
+      }
+    },
+    {
+      "id": 14,
+      "criteria": {
+        "TEST1": "2/TEST2,  1/TEST5,  -2/TEST1",
+        "TEST2": "2/TEST1,  1/TEST6,  -2/TEST2",
+        "TEST3": "2/TEST4,  1/TEST2,  -2/TEST3",
+        "TEST4": "2/TEST3,  1/TEST1,  -2/TEST4",
+        "TEST5": "2/TEST6,  1/TEST3,  -2/TEST5",
+        "TEST6": "2/TEST5,  1/TEST4,  -2/TEST6"
+      }
+    },
+    {
+      "id": 18,
+      "criteria": {
+        "TEST1": "MOST TOTAL VEGETABLE = 10",
+        "TEST2": "FEWEST TOTAL VEGETABLE = 7",
+        "TEST3": "5 / VEGETABLE TYPE >=3",
+        "TEST4": "5 / MISSING VEGETABLE TYPE",
+        "TEST5": "3 / VEGETABLE TYPE >=2",
+        "TEST6": "COMPLETE SET = 12"
+      }
+    }
+  ]
+}
